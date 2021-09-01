@@ -1,0 +1,3 @@
+{
+  "eslintIgnore": ['animation.js', 'gestrue.js']
+}
