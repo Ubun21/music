@@ -6,7 +6,7 @@
       >
       <slot></slot>
     </div>
-    <div class="indicator-wrapper" v-show="enableIndicator">
+    <div class="indicator-wrapper" v-show="enableDot">
       <ul class="indicator">
         <li class="indicator-item" v-for="(value, index) in data.childLength" :key="index">
           <div class="indicator-item__dot"
@@ -55,8 +55,7 @@ export default defineComponent({
     },
     enableDot: {
       type: Boolean,
-      require: true,
-      default: false
+      require: true
     },
     index: {
       type: Number,
@@ -85,11 +84,6 @@ export default defineComponent({
 
     const activeIdx = computed(() => {
       return data.activeIndex
-    })
-
-    console.info(props.enableDot)
-    const enableIndicator = computed(() => {
-      return props.enableDot
     })
 
     if (props.overHiden) {
@@ -220,8 +214,7 @@ export default defineComponent({
       classes,
       data,
       activeIdx,
-      items,
-      enableIndicator
+      items
     }
   }
 })

@@ -1,15 +1,28 @@
 <template>
   <div class="recommend">
     <div class="carousel-wrapper">
-      <carousel>
-        <carousel-item :enableDot="true" v-for="(item, index) in sliders" :key="index">
+      <carousel :enableDot="true">
+        <carousel-item  v-for="(item, index) in sliders" :key="index">
           <a :href="item.link">
             <img :src="item.pic"  />
           </a>
         </carousel-item>
       </carousel>
     </div>
-    <div class="list-wrapper"></div>
+    <div class="list-wrapper">
+      <h1 class="list-title">热门推荐</h1>
+      <ul class="list-content">
+        <li class="list-content-item" v-for="item in albums" :key="item">
+          <div class="icon">
+            <img :src="item.pic">
+          </div>
+          <div class="text">
+            <h2 class="text-name">{{item.username}}</h2>
+            <p class="text-titlte">{{item.title}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -32,7 +45,7 @@ export default defineComponent({
     const result = await getRecommend()
     sliders.value = result.sliders
     albums.value = result.albums
-
+    console.info(albums.value)
     return {
       sliders,
       albums,
@@ -55,6 +68,37 @@ export default defineComponent({
           img {
             height: 150px;
           }
+        }
+      }
+    }
+  }
+  .list-wrapper {
+    display: flex;
+    height: calc(100vh - 194px);
+    flex-direction: column;
+    .list-title {
+      height: 65px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: blue;
+    }
+    .list-content {
+      flex: 1;
+      overflow: auto;
+      background: red;
+      .list-content-item {
+        display: flex;
+        padding: 0px 20px 20px 20px;
+        .icon {
+          padding-right: 20px;
+          img {
+            height: 60px;
+            width: 62px;
+          }
+        }
+        .text-name {
+          margin-bottom: 20px;
         }
       }
     }
