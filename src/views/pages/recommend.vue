@@ -45,7 +45,6 @@ export default defineComponent({
     const result = await getRecommend()
     sliders.value = result.sliders
     albums.value = result.albums
-    console.info(albums.value)
     return {
       sliders,
       albums,

@@ -8,7 +8,9 @@
         </suspense>
       </carousel-item>
       <carousel-item>
-        <singer></singer>
+        <suspense>
+          <singer></singer>
+        </suspense>
       </carousel-item>
       <carousel-item>
         <ranking></ranking>

@@ -1,11 +1,24 @@
 <template>
-  <div class="singer">me</div>
+  <div class="singer">
+    <index :data="singers"></index>
+  </div>
 </template>
 
 <script>
+import { getSingerList } from '../../service/singer'
+import Index from '../../components/index-list/index'
 import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'singer'
+  name: 'Singer',
+  components: {
+    Index
+  },
+  async setup () {
+    const singers = await getSingerList()
+    return {
+      singers
+    }
+  }
 })
 </script>
 
