@@ -1,6 +1,6 @@
 <template>
   <div class="singer">
-    <index :data="singers"></index>
+    <index :data="singers" :activeIndex="activeIndex"></index>
   </div>
 </template>
 
@@ -10,6 +10,7 @@ import Index from '../../components/index-list/index'
 import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'Singer',
+  props: ['activeIndex'],
   components: {
     Index
   },

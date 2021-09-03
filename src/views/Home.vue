@@ -9,7 +9,7 @@
       </carousel-item>
       <carousel-item>
         <suspense>
-          <singer></singer>
+          <singer :activeIndex="data.index"></singer>
         </suspense>
       </carousel-item>
       <carousel-item>
@@ -39,6 +39,7 @@ export default defineComponent({
     CarouselItem,
     Tab
   },
+  props: ['activeIndex'],
   setup (props) {
     const data = reactive({
       index: 0
