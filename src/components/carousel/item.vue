@@ -1,8 +1,8 @@
 <template>
   <div class="carousel-item"
-    @touchstart="start"
-    @touchmove="move"
-    @touchend="end"
+    @touchstart.passive="start"
+    @touchmove.passive="move"
+    @touchend.passive="end"
     :style="itemStyle"
   >
     <slot></slot>

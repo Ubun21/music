@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/home.vue'
+import SingerDetail from '../views/SingerDetail'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: Home
-  }
+  },
   // {
   //   path: '/singer',
   //   name: 'singer',
@@ -15,6 +16,10 @@ const routes = [
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '../views/Singer.vue')
   // }
+  {
+    path: '/singer/',
+    component: SingerDetail
+  }
 ]
 
 const router = createRouter({

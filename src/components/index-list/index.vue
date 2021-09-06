@@ -1,12 +1,14 @@
 <template>
   <div class="index-wrapper" ref="container">
-    <ul ref="list">
-      <li class="list" :ground-name="item.title"
+    <ul ref="indexList">
+      <li class="index-list" :ground-name="item.title"
         v-for="(item, index) in data.singers" :key="index"
       >
-        <div class="list-title">{{item.title}}</div>
+        <div class="list-title" :ground-name="item.title" ref="titles">{{item.title}}</div>
         <ul>
-          <li class="list-item" v-for="(child, index) in item.list" :key="index">
+          <li class="list-item" v-for="(child, index) in item.list" :key="index"
+            @click="onClick(child)"
+          >
             <div class="avator">
               <img :src="child.pic" />
             </div>
@@ -21,9 +23,9 @@
       <ul>
         <li class="item" :ground-name="item.title" v-for="(item, index) in data.singers" :key="index"
           :class="{ active: index === state.activeIdx}"
-          @touchstart="onClick"
-          @touchmove="onMove"
-          @touchend="onEnd"
+          @touchstart.passive="onStart"
+          @touchmove.passive="onMove"
+          @touchend.passive="onEnd"
         >
           {{item.title}}
         </li>
@@ -33,14 +35,17 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref, watch } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import useFixed from './useFixed'
+import useShortcut from './useShortcut'
 export default defineComponent({
   name: 'IndexList',
   props: ['data', 'activeIndex'],
-  setup (props) {
+  emits: ['select'],
+  setup (props, { emit }) {
     const container = ref(null)
-    const list = ref(null)
+    const indexList = ref(null)
+    const titles = ref(null)
     const state = reactive({
       active: false,
       heights: null,
@@ -48,15 +53,16 @@ export default defineComponent({
       activeIdx: 0
     })
     onMounted(() => {
-      if (list.value) {
-        const { heights, indexs } = useFixed(list)
+      if (indexList.value) {
+        const { heights, indexs } = useFixed(indexList)
+        useShortcut(container, state)
         state.heights = heights
         state.indexs = indexs
       }
     })
     let startX = 0
     let pos = 0
-    const onClick = (e) => {
+    const onStart = (e) => {
       startX = e.changedTouches[0].clientY
       const groundName = e.target.getAttribute('ground-name')
       pos = state.indexs.indexOf(groundName)
@@ -71,7 +77,11 @@ export default defineComponent({
       scrollByIdx(step)
     }
     const onEnd = (e) => {
+      console.info('end')
       pos = 0
+    }
+    const onClick = (item) => {
+      emit('select', item)
     }
     const scrollByIdx = (idx) => {
       const groundName = state.indexs[idx]
@@ -80,11 +90,13 @@ export default defineComponent({
     }
     return {
       container,
-      list,
+      indexList,
+      titles,
       state,
-      onClick,
+      onStart,
       onMove,
       onEnd,
+      onClick
     }
   }
 })
@@ -95,10 +107,10 @@ export default defineComponent({
   position: relative;
   height: 100%;
   overflow: scroll;
-  .list {
+  .index-list {
     .list-title {
-      // position: sticky;
-      // top: 0px;
+      position: sticky;
+      top: 0px;
       padding-left: 10px;
       background: red;
     }

@@ -18,7 +18,7 @@
           </div>
           <div class="text">
             <h2 class="text-name">{{item.username}}</h2>
-            <p class="text-titlte">{{item.title}}</p>
+            <p class="text-title">{{item.title}}</p>
           </div>
         </li>
       </ul>
@@ -96,8 +96,14 @@ export default defineComponent({
             width: 62px;
           }
         }
-        .text-name {
-          margin-bottom: 20px;
+        .text {
+          .text-name {
+            margin-bottom: 20px;
+          }
+          .text-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
     }

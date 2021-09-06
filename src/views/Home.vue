@@ -9,7 +9,7 @@
       </carousel-item>
       <carousel-item>
         <suspense>
-          <singer :activeIndex="data.index"></singer>
+          <singer :activeIndex="data.index" @select="onSelect"></singer>
         </suspense>
       </carousel-item>
       <carousel-item>
@@ -28,6 +28,7 @@ import Carousel from '../components/carousel/main'
 import CarouselItem from '../components/carousel/item'
 import { Singer, Recommend, Ranking, Me } from './pages/index'
 import Tab from '../components/tab/index'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'app',
   components: {
@@ -44,10 +45,8 @@ export default defineComponent({
     const data = reactive({
       index: 0
     })
+    const router = useRouter()
     onMounted(() => {
-      // setInterval(() => {
-      //   data.index = (data.index + 1) % 4
-      // }, 2000)
     })
     const hanldChange = (e) => {
       data.index = e
@@ -55,10 +54,22 @@ export default defineComponent({
     const active = (e) => {
       data.index = e
     }
+    const onSelect = (item) => {
+      router.push({
+        path: '/singer/',
+        query: {
+          id: item.mid,
+          pic: item.pic,
+          name: item.name
+        }
+      })
+      console.info('home', item)
+    }
     return {
       data,
       hanldChange,
-      active
+      active,
+      onSelect
     }
   }
 })

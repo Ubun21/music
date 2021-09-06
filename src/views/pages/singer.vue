@@ -1,6 +1,8 @@
 <template>
   <div class="singer">
-    <index :data="singers" :activeIndex="activeIndex"></index>
+    <index :data="singers" :activeIndex="activeIndex"
+      @select="onSelect"
+    ></index>
   </div>
 </template>
 
@@ -11,13 +13,18 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'Singer',
   props: ['activeIndex'],
+  emits: ['select'],
   components: {
     Index
   },
-  async setup () {
+  async setup (props, { emit }) {
     const singers = await getSingerList()
+    const onSelect = (item) => {
+      emit('select', item)
+    }
     return {
-      singers
+      singers,
+      onSelect
     }
   }
 })
