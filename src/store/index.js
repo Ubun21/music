@@ -1,19 +1,16 @@
-import { createStore } from 'vuex'
+import { createStore, createLogger } from 'vuex'
+import state from './state'
+import mutations from './mutation'
+import * as actions from './action'
+
+const debug = process.env.NODE_ENV !== 'production'
 
 export default createStore({
-  state: {
-    pageIndex: 0
-  },
-  mutations: {
-    setPageIndex (state, index) {
-      state.pageIndex = index
-    }
-  },
-  actions: {
-    setPageIndex ({ state, commit }, index) {
-      commit('setPageIndex', index)
-    }
-  },
+  state,
+  mutations,
+  actions,
+  strict: debug,
+  plugins: debug ? [createLogger()] : [],
   modules: {
   }
 })

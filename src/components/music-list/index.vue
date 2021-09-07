@@ -19,6 +19,7 @@
     >
       <song-list
         :songs="songs"
+        @selectItem="selectHandle"
       ></song-list>
     </div>
   </div>
@@ -27,6 +28,7 @@
 <script>
 import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import SongList from '../song-list/index'
 export default defineComponent({
   name: 'Music-List',
@@ -44,11 +46,13 @@ export default defineComponent({
       maxTranslate: 0,
       titleHeight: 0,
       filteValue: 0,
-      overflow: 'hidden'
+      overflow: 'hidden',
+      scale: 1
     })
-    const router = useRouter()
+    const router = useRouter() // 用来返回上级
     const list = ref(null) // 用来计算父容器的宽度
     const head = ref(null) // 用来计算title的高度
+    const store = useStore()
     const listWrapper = ref(null) // 用来得到scrollTop
     const styleHeight = computed(() => {
       const { height } = window.visualViewport
@@ -95,7 +99,6 @@ export default defineComponent({
       // scrollTop 不为0的时候 往下拉时禁止移动bgImage
       // 往下拉到bgImage最大值后，不在移动
       if (dx > 0 && temp >= state.maxTranslate) {
-        console.info('hide')
         state.overflow = 'hidden'
         return
       }
@@ -129,7 +132,8 @@ export default defineComponent({
       return {
         backgroundImage: `url(${props.pic})`,
         paddingTop: paddingTop.value,
-        filter: filte.value
+        filter: filte.value,
+        transform: `scale(${state.scale})`
       }
     })
     const height = computed(() => {
@@ -137,8 +141,11 @@ export default defineComponent({
       const bgHeight = state.paddingTop
       return height - bgHeight
     })
-    const clickHandle = (e) => {
+    const clickHandle = () => {
       router.go(-1)
+    }
+    const selectHandle = (list, index) => {
+      store.dispatch('selectPlay', { list, index })
     }
     return {
       state,
@@ -151,7 +158,8 @@ export default defineComponent({
       move,
       end,
       clickHandle,
-      styleHeight
+      styleHeight,
+      selectHandle
     }
   }
 })

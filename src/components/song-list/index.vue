@@ -1,7 +1,9 @@
 <template>
   <div class="song-list">
     <ul>
-      <li v-for="(item, index) in songs" :key="index">
+      <li v-for="(item, index) in songs" :key="index"
+        @click="clickHandle(songs, index)"
+      >
         <div class="item">
           <h2>{{ item.name }}</h2>
           <p class="text">
@@ -14,21 +16,20 @@
 </template>
 
 <script>
-import { defineComponent, watch } from 'vue'
+import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'SongList',
   props: {
     songs: Array
   },
-  setup (props) {
-    watch(
-      () => props.songs,
-      (val) => {
-        console.info('songlist props')
-        console.info(val)
-      }
-    )
-    return {}
+  emits: ['selectItem'],
+  setup (props, { emit }) {
+    const clickHandle = (songs, index) => {
+      emit('selectItem', songs, index)
+    }
+    return {
+      clickHandle
+    }
   }
 })
 </script>
