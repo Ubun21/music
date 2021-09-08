@@ -18,3 +18,27 @@ export function randomPlay ({ commit }, list) {
   commit('setCurrentIndex', 0)
   commit('setFullScreen', true)
 }
+
+export function setFullScreen ({ commit }, full) {
+  commit('setFullScreen', full)
+}
+
+export function setPlayState ({ commit }, state) {
+  commit('setPlayState', state)
+}
+
+export function setCurrentIndex ({ commit }, index) {
+  commit('setCurrentIndex', index)
+}
+
+export function setPlayMode ({ commit, state, getters }, mode) {
+  const currentSongId = getters.currentSong.id
+  if (mode === PLAY_MODE.random) {
+    commit('setPlayList', shuffle(state.sequenceList))
+  } else {
+    commit('setPlayList', state.sequenceList)
+  }
+  const currentIndex = state.playList.findIndex((item) => item.id === currentSongId)
+  commit('setPlayMode', mode)
+  commit('setCurrentIndex', currentIndex)
+}

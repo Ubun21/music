@@ -80,6 +80,7 @@ export default defineComponent({
     const disableTrans = false
     const move = (e) => {
       const dx = e.changedTouches[0].clientY - startY
+      console.info(dx)
       const paddingTop = state.paddingTop
       const temp = paddingTop + dx - lastDx
       // if ((dx < 0 && temp <= state.titleHeight) || (dx > 0 && temp >= state.maxTranslate)) {
@@ -193,6 +194,7 @@ export default defineComponent({
     }
   }
   .list-wrapper {
+    background: green;
     overflow: hidden;
   }
 }

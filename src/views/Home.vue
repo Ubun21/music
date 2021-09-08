@@ -63,7 +63,6 @@ export default defineComponent({
           name: item.name
         }
       })
-      console.info('home', item)
     }
     return {
       data,
