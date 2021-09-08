@@ -16,6 +16,15 @@ const mutations = {
   },
   setFullScreen (state, full) {
     state.fullScreen = full
+  },
+  addFavourite (state, item) {
+    state.favourite.push(item)
+  },
+  removeFavourite (state, item) {
+    const index = state.favourite.findIndex((f) => f.id === item.id)
+    if (index > -1) {
+      state.favourite.splice(index, 1)
+    }
   }
 }
 

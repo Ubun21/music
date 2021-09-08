@@ -33,7 +33,8 @@
             <i class="icon-next" :class="state.disableCls" @click="next"></i>
           </div>
           <div class="icon i-right">
-            <i class="icon-not-favorite"></i>
+            <i :class="getIconFavourite(currentSong)"
+              @click="changefavouriteStatus(currentSong)"></i>
           </div>
         </div>
       </div>
@@ -48,6 +49,7 @@
 <script>
 import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
 import useChangeMode from './useChangeMode'
+import useFavorite from './useFavorite'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -74,6 +76,7 @@ export default defineComponent({
 
     // hook
     const { modeIcon, changeMode } = useChangeMode()
+    const { getIconFavourite, changefavouriteStatus } = useFavorite()
     const goBack = () => {
       // todo 当浏览器的url变化的时候，页面没有退出
       store.dispatch('setFullScreen', false)
@@ -104,9 +107,12 @@ export default defineComponent({
         loose()
         return
       }
+      debugger
       if ((index - 1) === -1) {
-        index = list.lenght
+        index = list.length - 1
         store.dispatch('setCurrentIndex', index)
+        state.disableCls = true
+        state.songReady = false
         return
       }
       store.dispatch('setCurrentIndex', index - 1) // 切换歌曲
@@ -174,7 +180,9 @@ export default defineComponent({
       next,
       // hook
       modeIcon,
-      changeMode
+      changeMode,
+      getIconFavourite,
+      changefavouriteStatus
     }
   }
 })

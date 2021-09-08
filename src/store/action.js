@@ -1,8 +1,9 @@
 import { PLAY_MODE } from '../assets/js/constant'
 import { shuffle } from '../assets/js/utils'
+import { addFavouriteStroage, removeFavouriteStroage } from './stroage-array'
 
 export function selectPlay ({ commit }, { list, index }) {
-  commit('setPlayState', true)
+  commit('setPlayState', false)
   commit('setPlayList', list)
   commit('setSequenceList', list)
   commit('setPlayMode', PLAY_MODE.sequence)
@@ -41,4 +42,15 @@ export function setPlayMode ({ commit, state, getters }, mode) {
   const currentIndex = state.playList.findIndex((item) => item.id === currentSongId)
   commit('setPlayMode', mode)
   commit('setCurrentIndex', currentIndex)
+}
+
+const key = 'favorite'
+export function addfavourite ({ commit, state }, item) {
+  commit('addFavourite', item)
+  addFavouriteStroage(key, state.favourite)
+}
+
+export function removeFavourite ({ commit }, item) {
+  commit('removeFavourite', item)
+  removeFavouriteStroage(key, item)
 }
