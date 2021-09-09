@@ -14,17 +14,24 @@
       <div class="middle">
         <div class="middle-l">
           <!-- <img :src="currentSong.pic" /> -->
+          <rotate :url="currentSong.pic"></rotate>
         </div>
         <div class="middle-r">
         </div>
       </div>
       <div class="bottom">
         <div class="process-wrapper">
+          <span class="time time-left">{{formate(state.currentTime)}}</span>
           <use-process
+            class="process-bar"
             :time="state.currentTime"
             :duration="currentSong.duration * 1000"
-            :playmode="state.processState">
+            :playmode="state.processState"
+            @processchange="processchangeHandle"
+            @movechange="moveChangeHandle"
+            >
           </use-process>
+          <span class="time time-right">{{formate(currentSong.duration)}}</span>
         </div>
         <div class="opeartor">
           <div class="icon i-left">
@@ -57,14 +64,17 @@
 <script>
 import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
 import UseProcess from '../process/index'
+import Rotate from './rotate'
 import useChangeMode from './useChangeMode'
 import useFavorite from './useFavorite'
 import { useStore } from 'vuex'
+import { formate } from '../../assets/js/utils'
 
 export default defineComponent({
   name: 'Player',
   components: {
-    UseProcess
+    UseProcess,
+    Rotate
   },
   setup () {
     const state = reactive({
@@ -72,6 +82,7 @@ export default defineComponent({
       disableCls: true,
       songReady: false,
       processState: '',
+      rotate: false,
       currentTime: 0
     })
     const audioEl = ref(null)
@@ -115,6 +126,7 @@ export default defineComponent({
       state.processState = 'play'
       state.songReady = true
       state.disableCls = false
+      state.rotate = true
       store.dispatch('setPlayState', true)
     }
     const prev = () => {
@@ -127,7 +139,6 @@ export default defineComponent({
         loose()
         return
       }
-      debugger
       if ((index - 1) === -1) {
         index = list.length - 1
         store.dispatch('setCurrentIndex', index)
@@ -163,6 +174,18 @@ export default defineComponent({
     const updateTime = (e) => {
       state.currentTime = e.target.currentTime
     }
+    const processchangeHandle = (process) => {
+      const duration = currentSong.value.duration
+      const audio = audioEl.value
+      audio.currentTime = duration * (Math.floor(process) / 100)
+      console.info(process)
+    }
+    const moveChangeHandle = (process) => {
+      const duration = currentSong.value.duration
+      const audio = audioEl.value
+      audio.currentTime = duration * (Math.floor(process) / 100)
+      console.info(process)
+    }
     const loose = () => {
       audioEl.value.currentTime = 0
       audioEl.value.play()
@@ -190,6 +213,14 @@ export default defineComponent({
         }
       }
     )
+    watch(
+      currentSong,
+      (newSong, preSong) => {
+        if (newSong.id !== preSong.id && preSong.id) {
+          state.processState = 'restart'
+        }
+      }
+    )
     return {
       state,
       audioEl,
@@ -201,11 +232,14 @@ export default defineComponent({
       prev,
       next,
       updateTime,
+      formate,
       // hook
       modeIcon,
       changeMode,
       getIconFavourite,
-      changefavouriteStatus
+      changefavouriteStatus,
+      processchangeHandle,
+      moveChangeHandle
     }
   }
 })
@@ -251,13 +285,39 @@ export default defineComponent({
         position: absolute;
       }
     }
+    .middle {
+      position: relative;
+      height: 300px;
+      box-sizing: border-box;
+      .middle-l {
+        width: 80%;
+        margin: auto;
+        height: 300px;
+      }
+    }
     .bottom {
       position: relative;
       .process-wrapper {
+        display: flex;
         align-items: center;
         width: 80%;
         margin: 0px auto;
         padding: 10px 0;
+        .process-bar {
+          flex: 1;
+        }
+        .time {
+          display: inline-block;
+          width: 40px;
+          font-size: 6px;
+          color: yellow;
+        }
+        .time-left {
+          text-align: left;
+        }
+        .time-right {
+          text-align: right;
+        }
       }
       .opeartor {
         display: flex;

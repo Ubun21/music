@@ -21,7 +21,8 @@ export default defineComponent({
     }
   },
   emits: {
-    processchange: null
+    processchange: null,
+    change: null
   },
   setup (props, context) {
     const container = ref(null)
@@ -93,11 +94,11 @@ export default defineComponent({
 
 <style lang="scss">
 .slider-wraper {
-  height: 6px;
+  height: 4px;
   position: relative;
   background: red;
   .slider__bar {
-    height: 6px;
+    height: 4px;
     background: burlywood;
     width: 0;
   }
@@ -107,13 +108,16 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     transform: translateX(-50%);
-    height: 36px;
-    width: 36px;
-    top: -15px;
+    // height: 36px;
+    // width: 36px;
+    // top: -15px;
+    height: 20px;
+    width: 20px;
+    top: -9px;
     .button {
       display: inline-block;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       background: wheat;
     }

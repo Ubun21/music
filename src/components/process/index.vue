@@ -1,6 +1,10 @@
 <template>
-  <slider :useProcess="percentage" @processchange="changeHandle"></slider>
-  <span>{{time}}, {{duration}}, {{playmode}}</span>
+  <slider
+    :useProcess="percentage"
+    @processchange="changeHandle"
+    @change="moveChange"
+    >
+  </slider>
 </template>
 
 <script>
@@ -10,7 +14,7 @@ import Slider from '../slider/index.vue'
 export default defineComponent({
   name: 'UseProcess',
   props: {
-    playmode: { // 糟糕的名字
+    playmode: {
       type: String,
       default: ''
     },
@@ -22,10 +26,11 @@ export default defineComponent({
       type: Number
     }
   },
+  emits: ['processchange', 'movechange'],
   components: {
     Slider
   },
-  setup (props) {
+  setup (props, { emit }) {
     const state = ref('init')
     const startTime = ref(0)
     const pauseTime = ref(0)
@@ -48,14 +53,19 @@ export default defineComponent({
       }, 1000)
     }
     const changeHandle = (e) => {
-      debugger
       const process = e.process
       startTime.value = Date.now() - props.duration * (process / 100)
       if (state.value === 'done' || state.value === 'init') {
         tick()
       }
+      emit('processchange', process)
     }
-    // todo remove
+    const moveChange = (e) => {
+      const process = e.process
+      startTime.value = Date.now() - props.duration * (process / 100)
+      emit('movechange', process)
+    }
+    // 观察用户的输入的playmode, playmode: 'play'|'pause'|'resume'
     watch(
       () => props.playmode,
       (newVal) => {
@@ -77,13 +87,23 @@ export default defineComponent({
           startTime.value = Date.now() - (pauseTime.value - startTime.value)
           state.value = 'playing'
           tick()
+          return
+        }
+
+        if (newVal === 'restart') {
+          pauseTime.value = 0
+          clearTimeout(timeId)
+          percentage.value = 0
+          state.value = 'playing'
+          startTime.value = Date.now()
+          tick()
         }
       }
     )
     watch(
       () => props.time,
-      (time) => {
-        console.info(time)
+      () => {
+        // console.info(time)
       }
     )
     watch(state, (newState) => {
@@ -97,7 +117,8 @@ export default defineComponent({
       timeId,
       pauseTime,
       percentage,
-      changeHandle
+      changeHandle,
+      moveChange
     }
   }
 })

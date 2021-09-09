@@ -5,7 +5,6 @@ export function addFavouriteStroage (key, item) {
 }
 
 export function removeFavouriteStroage (key, item) {
-  debugger
   const arr = storage.get(key, [])
   const index = arr.findIndex(child => child.id === item.id)
   if (index > -1) {
