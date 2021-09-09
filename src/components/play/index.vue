@@ -19,6 +19,13 @@
         </div>
       </div>
       <div class="bottom">
+        <div class="process-wrapper">
+          <use-process
+            :time="state.currentTime"
+            :duration="currentSong.duration * 1000"
+            :playmode="state.processState">
+          </use-process>
+        </div>
         <div class="opeartor">
           <div class="icon i-left">
             <i :class="modeIcon" @click="changeMode"></i>
@@ -42,23 +49,30 @@
     <audio ref="audioEl"
       :src="currentSong.url"
       @canplay="canPlay"
+      @timeupdate="updateTime"
     ></audio>
   </div>
 </template>
 
 <script>
 import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
+import UseProcess from '../process/index'
 import useChangeMode from './useChangeMode'
 import useFavorite from './useFavorite'
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Player',
+  components: {
+    UseProcess
+  },
   setup () {
     const state = reactive({
       iconCenterCls: 'icon-play',
       disableCls: true,
-      songReady: false
+      songReady: false,
+      processState: '',
+      currentTime: 0
     })
     const audioEl = ref(null)
     const store = useStore()
@@ -85,14 +99,20 @@ export default defineComponent({
       if (!state.songReady) {
         return
       }
+      // 当在播放的时候，按下按钮为暂停, 当暂停是按下按钮为重新执行
+      if (playing.value) {
+        state.processState = 'pause'
+      } else {
+        state.processState = 'resume'
+      }
       store.dispatch('setPlayState', !playing.value)
     }
     const canPlay = () => {
-      console.info('canPlay exe')
       if (state.songReady) {
         state.disableCls = false
         return
       }
+      state.processState = 'play'
       state.songReady = true
       state.disableCls = false
       store.dispatch('setPlayState', true)
@@ -140,6 +160,9 @@ export default defineComponent({
       state.songReady = false
       state.disableCls = true
     }
+    const updateTime = (e) => {
+      state.currentTime = e.target.currentTime
+    }
     const loose = () => {
       audioEl.value.currentTime = 0
       audioEl.value.play()
@@ -154,7 +177,6 @@ export default defineComponent({
     watch(
       playing,
       (play) => {
-        console.info('watch')
         if (!state.songReady) {
           return
         }
@@ -178,6 +200,7 @@ export default defineComponent({
       canPlay,
       prev,
       next,
+      updateTime,
       // hook
       modeIcon,
       changeMode,
@@ -230,6 +253,12 @@ export default defineComponent({
     }
     .bottom {
       position: relative;
+      .process-wrapper {
+        align-items: center;
+        width: 80%;
+        margin: 0px auto;
+        padding: 10px 0;
+      }
       .opeartor {
         display: flex;
         align-items: center;
