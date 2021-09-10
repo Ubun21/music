@@ -1,6 +1,6 @@
 <template>
   <div class="play-wrapper">
-    <div class="normal-play" v-if="fullScreen">
+    <div class="normal-play" v-show="fullScreen">
       <div class="background">
         <img class="image" :src="currentSong.pic" />
       </div>
@@ -11,12 +11,20 @@
         <h1 class="title">{{currentSong.name}}</h1>
         <h2 class="subtitle">{{currentSong.singer}}</h2>
       </div>
-      <div class="middle">
-        <div class="middle-l">
+      <div class="middle"
+        @touchstart="onMiddleStart"
+        @touchmove="onMiddleMove"
+        @touchend="onMiddleEnd"
+        @contextmenu="e => e.preventDefault()"
+      >
+        <div class="middle-l" :style="{opacity : opacity}">
           <!-- <img :src="currentSong.pic" /> -->
-          <rotate :url="currentSong.pic"></rotate>
+          <div class="rotate">
+            <rotate :url="currentSong.pic"></rotate>
+          </div>
         </div>
-        <div class="middle-r">
+        <div class="middle-r" ref="moveBox">
+          test
         </div>
       </div>
       <div class="bottom">
@@ -67,6 +75,7 @@ import UseProcess from '../process/index'
 import Rotate from './rotate'
 import useChangeMode from './useChangeMode'
 import useFavorite from './useFavorite'
+import useAnimation from './useAnimation'
 import { useStore } from 'vuex'
 import { formate } from '../../assets/js/utils'
 
@@ -102,6 +111,7 @@ export default defineComponent({
     // hook
     const { modeIcon, changeMode } = useChangeMode()
     const { getIconFavourite, changefavouriteStatus } = useFavorite()
+    const { opacity, moveBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
     const goBack = () => {
       // todo 当浏览器的url变化的时候，页面没有退出
       store.dispatch('setFullScreen', false)
@@ -119,10 +129,11 @@ export default defineComponent({
       store.dispatch('setPlayState', !playing.value)
     }
     const canPlay = () => {
-      if (state.songReady) {
-        state.disableCls = false
-        return
-      }
+      // if (state.songReady) {
+      //   state.disableCls = false
+      //   return
+      // }
+      console.info('canplay')
       state.processState = 'play'
       state.songReady = true
       state.disableCls = false
@@ -161,9 +172,12 @@ export default defineComponent({
         loose()
         return
       }
-      if ((index + 1) > list.length) {
-        index = 1
+      if ((index + 1) >= list.length) {
+        index = 0
         store.dispatch('setCurrentIndex', index)
+        store.dispatch('setPlayState', false)
+        state.songReady = false
+        state.disableCls = true
         return
       }
       store.dispatch('setCurrentIndex', index + 1)
@@ -233,13 +247,18 @@ export default defineComponent({
       next,
       updateTime,
       formate,
+      processchangeHandle,
+      moveChangeHandle,
       // hook
+      opacity,
+      moveBox,
       modeIcon,
       changeMode,
       getIconFavourite,
       changefavouriteStatus,
-      processchangeHandle,
-      moveChangeHandle
+      onMiddleStart,
+      onMiddleMove,
+      onMiddleEnd
     }
   }
 })
@@ -289,10 +308,23 @@ export default defineComponent({
       position: relative;
       height: 300px;
       box-sizing: border-box;
+      white-space: nowrap;
       .middle-l {
-        width: 80%;
-        margin: auto;
-        height: 300px;
+        display: inline-block;
+        width: 100%;
+        .rotate {
+          vertical-align: middle;
+          width: 80%;
+          margin: auto;
+          height: 300px;
+        }
+      }
+      .middle-r {
+        background: rebeccapurple;
+        vertical-align: middle;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
       }
     }
     .bottom {
