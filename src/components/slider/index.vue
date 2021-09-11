@@ -35,11 +35,13 @@ export default defineComponent({
 
     onMounted(() => {
       if (container.value) {
+        // todo remove
         containerRect.value = container.value.getBoundingClientRect()
       }
     })
 
     const touchStartHandler = (e) => {
+      containerRect.value = container.value.getBoundingClientRect()
       const clientX = e.changedTouches[0]?.clientX
       lastTouchPointX.value = clientX
       process.value = ((clientX - containerRect.value.x) / containerRect.value.width).toFixed(4) * 100

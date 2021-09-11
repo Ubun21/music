@@ -23,3 +23,10 @@ export function formate (interval) {
   const second = (interval % 60 + '').padStart(2, '0')
   return `${minute}:${second}`
 }
+
+export function toFixed2 (num) {
+  if (typeof num !== 'number') {
+    throw new Error('tofixed input must be number')
+  }
+  return Number(num.toFixed(2))
+}

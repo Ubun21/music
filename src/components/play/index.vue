@@ -24,7 +24,15 @@
           </div>
         </div>
         <div class="middle-r" ref="moveBox">
-          test
+          <div class="lyric-wrapper" ref="lyricWrapper">
+            <ul v-if="playingLyric !== null">
+              <li v-for="(text, index) in playingLyric.body" :key="index">
+                <p ref="item" class="text" :class="{ active: currentLine === Number(index) }" v-if="text !== ''">
+                  {{text}}
+                </p>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="bottom">
@@ -76,8 +84,9 @@ import Rotate from './rotate'
 import useChangeMode from './useChangeMode'
 import useFavorite from './useFavorite'
 import useAnimation from './useAnimation'
+import useLyric from './useLyric'
 import { useStore } from 'vuex'
-import { formate } from '../../assets/js/utils'
+import { formate, toFixed2 } from '../../assets/js/utils'
 
 export default defineComponent({
   name: 'Player',
@@ -112,6 +121,7 @@ export default defineComponent({
     const { modeIcon, changeMode } = useChangeMode()
     const { getIconFavourite, changefavouriteStatus } = useFavorite()
     const { opacity, moveBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
+    const { playingLyric, currentLine, lyricWrapper, item } = useLyric(state)
     const goBack = () => {
       // todo 当浏览器的url变化的时候，页面没有退出
       store.dispatch('setFullScreen', false)
@@ -189,15 +199,17 @@ export default defineComponent({
       state.currentTime = e.target.currentTime
     }
     const processchangeHandle = (process) => {
+      debugger
       const duration = currentSong.value.duration
       const audio = audioEl.value
-      audio.currentTime = duration * (Math.floor(process) / 100)
+      const time = duration * toFixed2((Math.floor(process) / 100))
+      audio.currentTime = time
       console.info(process)
     }
     const moveChangeHandle = (process) => {
       const duration = currentSong.value.duration
       const audio = audioEl.value
-      audio.currentTime = duration * (Math.floor(process) / 100)
+      audio.currentTime = duration * toFixed2((Math.floor(process) / 100))
       console.info(process)
     }
     const loose = () => {
@@ -258,7 +270,11 @@ export default defineComponent({
       changefavouriteStatus,
       onMiddleStart,
       onMiddleMove,
-      onMiddleEnd
+      onMiddleEnd,
+      playingLyric,
+      currentLine,
+      lyricWrapper,
+      item
     }
   }
 })
@@ -305,8 +321,10 @@ export default defineComponent({
       }
     }
     .middle {
-      position: relative;
-      height: 300px;
+      position: fixed;
+      top: 80px;
+      bottom: 170px;
+      width: 100%;
       box-sizing: border-box;
       white-space: nowrap;
       .middle-l {
@@ -320,15 +338,30 @@ export default defineComponent({
         }
       }
       .middle-r {
-        background: rebeccapurple;
+        background: transparent;
         vertical-align: middle;
         display: inline-block;
         width: 100%;
         height: 100%;
+        .lyric-wrapper {
+          height: 100%;
+          overflow: auto;
+          .text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            line-height: 32px;
+            text-align: center;
+          }
+          .text.active {
+            color: #fff;
+          }
+        }
       }
     }
     .bottom {
-      position: relative;
+      position: absolute;
+      width: 100%;
+      bottom: 50px;
       .process-wrapper {
         display: flex;
         align-items: center;
