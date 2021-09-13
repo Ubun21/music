@@ -60,10 +60,10 @@ export default defineComponent({
         state.indexs = indexs
       }
     })
-    let startX = 0
+    let startY = 0
     let pos = 0
     const onStart = (e) => {
-      startX = e.changedTouches[0].clientY
+      startY = e.changedTouches[0].clientY
       const groundName = e.target.getAttribute('ground-name')
       pos = state.indexs.indexOf(groundName)
       const scrollTop = state.heights.get(groundName)
@@ -71,7 +71,7 @@ export default defineComponent({
       container.value.scrollTop = scrollTop
     }
     const onMove = (e) => {
-      const dx = e.changedTouches[0].clientY - startX
+      const dx = e.changedTouches[0].clientY - startY
       const step = pos + Math.floor(dx / 16)
       state.activeIdx = step
       scrollByIdx(step)

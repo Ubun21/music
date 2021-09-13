@@ -1,0 +1,35 @@
+.slider-enter-active,
+.slider-leave-active {
+  transition: transform 0.5s;
+  transform: translateY(0);
+}
+
+.slider-enter-from,
+.slider-leave-to {
+  transform: translateY(100%);
+}
+
+.scala-enter-active,
+.scala-leave-active {
+  transform-origin: bottom left;
+  transition: all 0.5s;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scala-enter-from,
+.scala-leave-to {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.move-enter-active,
+.move-leave-active {
+  transition: transform 0.5s;
+  transform: translateX(0);
+}
+
+.move-enter-from,
+.move-leave-to {
+  transform: translateX(100%);
+}

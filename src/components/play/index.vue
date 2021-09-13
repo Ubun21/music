@@ -1,73 +1,79 @@
 <template>
   <div class="play-wrapper">
-    <div class="normal-play" v-show="fullScreen">
-      <div class="background">
-        <img class="image" :src="currentSong.pic" />
+    <transition name="scala">
+      <div class="normal-play" v-show="fullScreen">
+        <div class="background">
+          <img class="image" :src="currentSong.pic" />
+        </div>
+        <div class="top">
+          <div class="back">
+            <i class="icon-back" @click="goBack"></i>
+          </div>
+          <h1 class="title">{{currentSong.name}}</h1>
+          <h2 class="subtitle">{{currentSong.singer}}</h2>
+        </div>
+        <div class="middle"
+          @touchstart="onMiddleStart"
+          @touchmove="onMiddleMove"
+          @touchend="onMiddleEnd"
+          @contextmenu="e => e.preventDefault()"
+          ref="animationWrapper"
+        >
+          <div class="middle-l" ref="opacityBox" :style="{opacity : opacity}">
+            <!-- <img :src="currentSong.pic" /> -->
+            <div class="rotate">
+              <rotate :url="currentSong.pic"></rotate>
+            </div>
+          </div>
+          <div class="middle-r" ref="moveBox">
+            <div class="lyric-wrapper" ref="lyricWrapper">
+              <ul v-if="playingLyric !== null">
+                <li v-for="(text, index) in playingLyric.body" :key="index">
+                  <p ref="item" class="text" :class="{ active: currentLine === Number(index) }" v-if="text !== ''">
+                    {{text}}
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="bottom">
+          <div class="process-wrapper">
+            <span class="time time-left">{{formate(state.currentTime)}}</span>
+            <use-process
+              class="process-bar"
+              :time="state.currentTime"
+              :duration="currentSong.duration * 1000"
+              :playmode="state.processState"
+              @processchange="processchangeHandle"
+              @movechange="moveChangeHandle"
+              >
+            </use-process>
+            <span class="time time-right">{{formate(currentSong.duration)}}</span>
+          </div>
+          <div class="opeartor">
+            <div class="icon i-left">
+              <i :class="modeIcon" @click="changeMode"></i>
+            </div>
+            <div class="icon i-left" :class="{disable: state.disableCls}">
+              <i class="icon-prev" @click="prev"></i>
+            </div>
+            <div class="icon i-center" :class="{disable: state.disableCls}">
+              <i :class="state.iconCenterCls" @click="pauseHandle"></i>
+            </div>
+            <div class="icon i-right" :class="{disable: state.disableCls}">
+              <i class="icon-next" :class="state.disableCls" @click="next"></i>
+            </div>
+            <div class="icon i-right">
+              <i :class="getIconFavourite(currentSong)"
+                @click="changefavouriteStatus(currentSong)"></i>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="top">
-        <div class="back">
-          <i class="icon-back" @click="goBack"></i>
-        </div>
-        <h1 class="title">{{currentSong.name}}</h1>
-        <h2 class="subtitle">{{currentSong.singer}}</h2>
-      </div>
-      <div class="middle"
-        @touchstart="onMiddleStart"
-        @touchmove="onMiddleMove"
-        @touchend="onMiddleEnd"
-        @contextmenu="e => e.preventDefault()"
-      >
-        <div class="middle-l" :style="{opacity : opacity}">
-          <!-- <img :src="currentSong.pic" /> -->
-          <div class="rotate">
-            <rotate :url="currentSong.pic"></rotate>
-          </div>
-        </div>
-        <div class="middle-r" ref="moveBox">
-          <div class="lyric-wrapper" ref="lyricWrapper">
-            <ul v-if="playingLyric !== null">
-              <li v-for="(text, index) in playingLyric.body" :key="index">
-                <p ref="item" class="text" :class="{ active: currentLine === Number(index) }" v-if="text !== ''">
-                  {{text}}
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="bottom">
-        <div class="process-wrapper">
-          <span class="time time-left">{{formate(state.currentTime)}}</span>
-          <use-process
-            class="process-bar"
-            :time="state.currentTime"
-            :duration="currentSong.duration * 1000"
-            :playmode="state.processState"
-            @processchange="processchangeHandle"
-            @movechange="moveChangeHandle"
-            >
-          </use-process>
-          <span class="time time-right">{{formate(currentSong.duration)}}</span>
-        </div>
-        <div class="opeartor">
-          <div class="icon i-left">
-            <i :class="modeIcon" @click="changeMode"></i>
-          </div>
-          <div class="icon i-left" :class="{disable: state.disableCls}">
-            <i class="icon-prev" @click="prev"></i>
-          </div>
-          <div class="icon i-center" :class="{disable: state.disableCls}">
-            <i :class="state.iconCenterCls" @click="pauseHandle"></i>
-          </div>
-          <div class="icon i-right" :class="{disable: state.disableCls}">
-            <i class="icon-next" :class="state.disableCls" @click="next"></i>
-          </div>
-          <div class="icon i-right">
-            <i :class="getIconFavourite(currentSong)"
-              @click="changefavouriteStatus(currentSong)"></i>
-          </div>
-        </div>
-      </div>
+    </transition>
+    <div class="mini-play">
+      <mini-play :process="state.process" :pauseHandle="pauseHandle"></mini-play>
     </div>
     <audio ref="audioEl"
       :src="currentSong.url"
@@ -81,6 +87,7 @@
 import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
 import UseProcess from '../process/index'
 import Rotate from './rotate'
+import MiniPlay from './mini-play.vue'
 import useChangeMode from './useChangeMode'
 import useFavorite from './useFavorite'
 import useAnimation from './useAnimation'
@@ -92,13 +99,15 @@ export default defineComponent({
   name: 'Player',
   components: {
     UseProcess,
-    Rotate
+    Rotate,
+    MiniPlay
   },
   setup () {
     const state = reactive({
       iconCenterCls: 'icon-play',
       disableCls: true,
       songReady: false,
+      process: 0,
       processState: '',
       rotate: false,
       currentTime: 0
@@ -120,7 +129,7 @@ export default defineComponent({
     // hook
     const { modeIcon, changeMode } = useChangeMode()
     const { getIconFavourite, changefavouriteStatus } = useFavorite()
-    const { opacity, moveBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
+    const { opacity, animationWrapper, moveBox, opacityBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
     const { playingLyric, currentLine, lyricWrapper, item } = useLyric(state)
     const goBack = () => {
       // todo 当浏览器的url变化的时候，页面没有退出
@@ -196,6 +205,7 @@ export default defineComponent({
       state.disableCls = true
     }
     const updateTime = (e) => {
+      state.process = Math.floor(e.target.currentTime) / currentSong.value.duration
       state.currentTime = e.target.currentTime
     }
     const processchangeHandle = (process) => {
@@ -263,7 +273,9 @@ export default defineComponent({
       moveChangeHandle,
       // hook
       opacity,
+      animationWrapper,
       moveBox,
+      opacityBox,
       modeIcon,
       changeMode,
       getIconFavourite,

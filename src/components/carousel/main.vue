@@ -116,20 +116,20 @@ export default defineComponent({
         -width * data.activeIndex,
         -width * data.activeIndex - width,
         0,
-        0.5
+        1
       )
       const nextAnimation = new Animation(nextItem, 'setTranslate', (v) => v,
         -width * nextPos + width,
         -width * nextPos,
         0,
-        0.5
+        1
       )
       data.timeLine.reset()
       data.timeLine.add(curAnimation)
       data.timeLine.add(nextAnimation)
       data.timeLine.start()
       data.activeIndex = nextPos
-      data.timer = setTimeout(nextPic, 7000)
+      data.timer = setTimeout(nextPic, 5000)
     }
     onMounted(() => {
       if (root.value) {

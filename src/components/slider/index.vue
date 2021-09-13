@@ -3,7 +3,7 @@
     <div class="slider__bar" :style="{width: styleWidth}"></div>
     <div class="slider__button"
      :style="{ left: styleLeft}"
-     @touchmove="touchMoveHandler"
+     @touchmove.prevent="touchMoveHandler"
      @touchend="touchEndHandler">
       <div class="button"></div>
     </div>

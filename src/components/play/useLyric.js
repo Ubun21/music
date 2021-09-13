@@ -42,11 +42,15 @@ export default function useLyric (state) {
       if (!newSong.id || !newSong.url) {
         return
       }
+      const lyricWrapperEl = lyricWrapper.value
       const lyric = await getLyric(newSong)
       playingLyric.value = parserLyric(lyric)
       line = 0
       count = 0
       lastScrollTop = 0
+      if (lyricWrapperEl) {
+        lyricWrapperEl.scrollTop = 0
+      }
     }
   )
   return {

@@ -45,6 +45,7 @@ export default defineComponent({
     const result = await getRecommend()
     sliders.value = result.sliders
     albums.value = result.albums
+    console.info(sliders.value)
     return {
       sliders,
       albums,
@@ -66,6 +67,8 @@ export default defineComponent({
         a {
           img {
             height: 150px;
+            width: 100%;
+            object-fit: fill;
           }
         }
       }

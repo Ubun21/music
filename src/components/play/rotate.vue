@@ -1,6 +1,6 @@
 <template>
   <div class="rotate-wrapper">
-    <div class="play" :class="cls" ref="wrapper">
+    <div class="play" :class="cls" :style="borderStyle" ref="wrapper">
       <img :src="url" />
     </div>
   </div>
@@ -14,12 +14,23 @@ export default defineComponent({
   props: {
     url: {
       type: String
+    },
+    borderWidth: {
+      type: Number,
+      default: 0
     }
   },
   setup (props) {
     const cls = ref('running')
     const store = useStore()
     const playing = computed(() => store.state.playing)
+    const borderStyle = computed(() => {
+      const borderStri = '6px solid lawngreen'
+      if (props.borderWidth !== 0) {
+        return { border: `${props.borderWidth}px solid lawngreen` }
+      }
+      return { border: borderStri }
+    })
     watch(
       playing,
       (playing) => {
@@ -31,7 +42,8 @@ export default defineComponent({
       }
     )
     return {
-      cls
+      cls,
+      borderStyle
     }
   }
 })
@@ -49,7 +61,6 @@ export default defineComponent({
 .rotate-wrapper {
   .play {
     animation: rotate 20s linear infinite;
-    border: 6px solid lawngreen;
     border-radius: 50%;
     img {
       border-radius: 50%;

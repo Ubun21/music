@@ -102,7 +102,6 @@ export default defineComponent({
       }
       moved = true
       e.stopPropagation()
-      // e.preventDefault()
       const dx = getClientX(e) - startX
       const dy = getClientY(e) - startY
       if (dy < -10 || dy > 10) {
@@ -121,8 +120,6 @@ export default defineComponent({
       if (!moved) {
         return
       }
-      e.stopPropagation()
-      // e.preventDefault()
       const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
       let direction = 0
@@ -140,19 +137,19 @@ export default defineComponent({
         preOffset,
         -width - width * prePos + width * direction,
         0,
-        0.2
+        1
       )
       const curAnimation = new Animation(currItem, 'setTranslate', (v) => v,
         currOffset,
         -width * data.position + width * direction,
         0,
-        0.2
+        1
       )
       const nextAnimation = new Animation(nextItem, 'setTranslate', (v) => v,
         nextOffset,
         width - width * nextPos + width * direction,
         0,
-        0.2
+        1
       )
       timeLine.add(preAnimation)
       timeLine.add(curAnimation)
