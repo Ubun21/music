@@ -5,7 +5,7 @@
         <rotate :url="currentSong.pic" :borderWidth="1"></rotate>
       </div>
       <div class="center">
-        <carousel :loop="false">
+        <carousel :loop="false" :fclick="true">
           <carousel-item v-for="(item, index) in playList" :key="index">
             <h2 class="song-name">{{item.name}}</h2>
             <p class="singer-name">{{item.singer}}</p>

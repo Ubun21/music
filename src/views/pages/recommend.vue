@@ -45,7 +45,6 @@ export default defineComponent({
     const result = await getRecommend()
     sliders.value = result.sliders
     albums.value = result.albums
-    console.info(sliders.value)
     return {
       sliders,
       albums,
@@ -91,6 +90,9 @@ export default defineComponent({
       background: red;
       .list-content-item {
         display: flex;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding: 0px 20px 20px 20px;
         .icon {
           padding-right: 20px;

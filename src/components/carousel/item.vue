@@ -91,7 +91,6 @@ export default defineComponent({
     let startX = 0
     // 当发生y上的移动时
     let startY = 0
-    let moved = false
     let offset = 0
     const start = (e) => {
       e.stopPropagation()
@@ -103,17 +102,44 @@ export default defineComponent({
       const itemTranslate = Math.floor(scopeCarousel.items.value[data.position].setTranslate)
       offset = data.position * width + itemTranslate
     }
+    const angle = (cx, cy, ex, ey) => {
+      var dy = ey - cy
+      var dx = ex - cx
+      var theta = Math.atan2(dy, dx)
+      theta *= 180 / Math.PI
+      return theta
+    }
+    const angle360 = (cx, cy, ex, ey) => {
+      var theta = angle(cx, cy, ex, ey)
+      if (theta < 0) theta = 360 + theta
+      return theta
+    }
+    const isNotMove = (ang) => {
+      // 0-28,333-360从左往右移动
+      // 140-180从右往左移动
+      let move = true
+      if ((ang >= 0 && ang <= 28) || (ang >= 333 && ang <= 360)) {
+        move = false
+      }
+      if (ang >= 140 && ang <= 190) {
+        move = false
+      }
+      return move
+    }
     const move = (e) => {
       if (!scopeCarousel.data.childReady) {
         return
       }
-      moved = true
       e.stopPropagation()
-      const dx = getClientX(e) - startX
-      const dy = getClientY(e) - startY
-      if (dy < -10 || dy > 10) {
+      const moveX = getClientX(e)
+      const moveY = getClientY(e)
+      const ang = angle360(startX, startY, moveX, moveY)
+      const notMove = isNotMove(ang)
+      if (notMove) {
         return
       }
+
+      const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
       const { prePos, nextPos, currItem, preItem, nextItem } = getTriple()
       const preBase = -width * prePos - width + offset
@@ -124,9 +150,14 @@ export default defineComponent({
       nextItem.setTranslate = nextBase + dx
     }
     const end = (e) => {
-      if (!moved) {
+      const moveX = getClientX(e)
+      const moveY = getClientY(e)
+      const ang = angle360(startX, startY, moveX, moveY)
+      const notMove = isNotMove(ang)
+      if (notMove) {
         return
       }
+
       const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
       const fclick = scopeCarousel.isFclick.value
