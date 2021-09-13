@@ -1,7 +1,7 @@
 <template>
   <div class="home-wrapper">
     <tab @active="hanldChange" :index="data.index"></tab>
-    <carousel :index="data.index" :loop="false" @active="active">
+    <carousel :index="data.index" :fclick="true" :loop="false" @active="active">
       <carousel-item>
         <suspense>
           <recommend></recommend>
@@ -43,10 +43,12 @@ export default defineComponent({
   props: ['activeIndex'],
   setup (props) {
     const data = reactive({
-      index: 0
+      index: 0,
+      flick: false
     })
     const router = useRouter()
     onMounted(() => {
+
     })
     const hanldChange = (e) => {
       data.index = e

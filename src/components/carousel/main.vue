@@ -60,6 +60,10 @@ export default defineComponent({
     index: {
       type: Number,
       default: 0
+    },
+    fclick: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['active'],
@@ -84,6 +88,11 @@ export default defineComponent({
 
     const activeIdx = computed(() => {
       return data.activeIndex
+    })
+
+    // todo remove
+    const isFclick = computed(() => {
+      return props.fclick
     })
 
     if (props.overHiden) {
@@ -167,7 +176,8 @@ export default defineComponent({
       data,
       items,
       nextPic: nextPic,
-      loop: props.loop
+      loop: props.loop,
+      isFclick
     })
     watch(
       () => data.activeIndex,
@@ -214,7 +224,8 @@ export default defineComponent({
       classes,
       data,
       activeIdx,
-      items
+      items,
+      isFclick
     }
   }
 })

@@ -52,7 +52,14 @@ export default defineComponent({
         transform: value
       }
     })
-
+    const isFclick = computed(() => {
+      if (!scopeCarousel) {
+        return false
+      }
+      const result = scopeCarousel.isFclick.value
+      console.info('fclick result', result)
+      return result
+    })
     const setTranslate = computed({
       get () {
         return data.translate
@@ -122,10 +129,12 @@ export default defineComponent({
       }
       const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
+      const fclick = scopeCarousel.isFclick.value
+      const speed = fclick ? 0.3 : 1
       let direction = 0
-      if ((dx < -width / 2)) {
+      if ((dx < -width / 2) || (fclick && dx < 0)) {
         direction = -1
-      } else if ((dx > width / 2)) {
+      } else if ((dx > width / 2) || ((fclick && dx > 0))) {
         direction = 1
       }
       const timeLine = new TimeLine()
@@ -137,19 +146,19 @@ export default defineComponent({
         preOffset,
         -width - width * prePos + width * direction,
         0,
-        1
+        speed
       )
       const curAnimation = new Animation(currItem, 'setTranslate', (v) => v,
         currOffset,
         -width * data.position + width * direction,
         0,
-        1
+        speed
       )
       const nextAnimation = new Animation(nextItem, 'setTranslate', (v) => v,
         nextOffset,
         width - width * nextPos + width * direction,
         0,
-        1
+        speed
       )
       timeLine.add(preAnimation)
       timeLine.add(curAnimation)
@@ -192,7 +201,8 @@ export default defineComponent({
       move,
       end,
       data,
-      itemStyle
+      itemStyle,
+      isFclick
     }
   }
 })
