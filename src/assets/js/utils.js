@@ -30,3 +30,34 @@ export function toFixed2 (num) {
   }
   return Number(num.toFixed(2))
 }
+
+export function angle (cx, cy, ex, ey) {
+  var dy = ey - cy
+  var dx = ex - cx
+  var theta = Math.atan2(dy, dx)
+  theta *= 180 / Math.PI
+  return theta
+}
+export function angle360 (cx, cy, ex, ey) {
+  var theta = angle(cx, cy, ex, ey)
+  if (theta < 0) theta = 360 + theta
+  return theta
+}
+export function isNotMove (ang) {
+  // 0-28,333-360从左往右移动
+  // 140-180从右往左移动
+  let move = true
+  if ((ang >= 0 && ang <= 28) || (ang >= 333 && ang <= 360)) {
+    move = false
+  }
+  if (ang >= 140 && ang <= 190) {
+    move = false
+  }
+  return move
+}
+
+export function isCannotMoveable (startX, startY, moveX, moveY) {
+  const ang = angle360(startX, startY, moveX, moveY)
+  const notMove = isNotMove(ang)
+  return notMove
+}

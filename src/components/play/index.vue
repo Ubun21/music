@@ -38,6 +38,10 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="dot-wrapper" ref="dotWrapper">
+            <span class="dot" :class="{active: activeIndex === 1}" :index="1"></span>
+            <span class="dot" :class="{active: activeIndex === 2}" :index="2"></span>
+          </div>
           <div class="process-wrapper">
             <span class="time time-left">{{formate(state.currentTime)}}</span>
             <use-process
@@ -53,20 +57,21 @@
           </div>
           <div class="opeartor">
             <div class="icon i-left">
-              <i :class="modeIcon" @click="changeMode"></i>
+              <i :class="modeIcon" @touchstart.stop="changeMode"></i>
             </div>
             <div class="icon i-left" :class="{disable: state.disableCls}">
-              <i class="icon-prev" @click="prev"></i>
+              <i class="icon-prev" @touchstart.stop="prev"></i>
             </div>
             <div class="icon i-center" :class="{disable: state.disableCls}">
-              <i :class="state.iconCenterCls" @click="pauseHandle"></i>
+              <i :class="state.iconCenterCls" @touchstart.stop="pauseHandle"></i>
             </div>
+            <!-- click.stop不起作用 -->
             <div class="icon i-right" :class="{disable: state.disableCls}">
-              <i class="icon-next" :class="state.disableCls" @click="next"></i>
+              <i class="icon-next" :class="state.disableCls" @touchstart.stop="next"></i>
             </div>
             <div class="icon i-right">
               <i :class="getIconFavourite(currentSong)"
-                @click="changefavouriteStatus(currentSong)"></i>
+                @touchstart.stop="changefavouriteStatus(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -129,7 +134,7 @@ export default defineComponent({
     // hook
     const { modeIcon, changeMode } = useChangeMode()
     const { getIconFavourite, changefavouriteStatus } = useFavorite()
-    const { opacity, animationWrapper, moveBox, opacityBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
+    const { activeIndex, opacity, animationWrapper, moveBox, opacityBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
     const { playingLyric, currentLine, lyricWrapper, item } = useLyric(state)
     const goBack = () => {
       // todo 当浏览器的url变化的时候，页面没有退出
@@ -209,7 +214,6 @@ export default defineComponent({
       state.currentTime = e.target.currentTime
     }
     const processchangeHandle = (process) => {
-      debugger
       const duration = currentSong.value.duration
       const audio = audioEl.value
       const time = duration * toFixed2((Math.floor(process) / 100))
@@ -286,7 +290,8 @@ export default defineComponent({
       playingLyric,
       currentLine,
       lyricWrapper,
-      item
+      item,
+      activeIndex
     }
   }
 })
@@ -374,6 +379,22 @@ export default defineComponent({
       position: absolute;
       width: 100%;
       bottom: 50px;
+      .dot-wrapper {
+        text-align: center;
+        .dot {
+          display: inline-block;
+          height: 8px;
+          width: 8px;
+          margin: 0 4px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.5)
+        }
+        .dot.active {
+          width: 20px;
+          border-radius: 5px;
+          background: rgba(255, 255, 255, 0.8);
+        }
+      }
       .process-wrapper {
         display: flex;
         align-items: center;
