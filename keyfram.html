@@ -1,27 +1,100 @@
 <!DOCTYPE html>
 <head>
   <style>
-     @keyframes fade {
-      0% {
-        transform: scale(100%);
-      }
-      100% {
-        transform: scale(0);
-      }
-    }
-    div {
-      height: 100vh;
-      width: 100vw;
-      background: red;
-      transform-origin: bottom left;
-      animation: fade 6s infinite;
-    }
   </style>
 
 </head>
 <body>
-  <div></div>
   <script>
+    const obj = {
+      0: "我是如此相信 - 周杰伦 (Jay Chou)",
+      12: "词：方文山",
+      25: "曲：周杰伦",
+      37: "鸟群离开了森林",
+      41: "整座天空很灰心",
+      44: "蝴蝶不再被吸引",
+      48: "玫瑰盛开的很安静",
+      51: "远方的风雨不停",
+      55: "城市苍白而孤寂",
+      58: "徘徊无助的人群",
+      61: "焦虑着何时放晴",
+      65: "故事里能毁坏的只有风景",
+      68: "谁也摧毁不了我们的梦境",
+      72: "弦月旁的流星划过了天际",
+      74: "我许下 的愿望 该向谁 去说明",
+      79: "陨石在浩瀚的宇宙间旅行",
+      82: "璀璨的夜空里漫天的水晶",
+      85: "我的祷告终于有了回音",
+      90: "我是如此相信",
+      93: "在背后支撑的是你",
+      96: "一直与我并肩而行",
+      100: "仰望等太阳升起",
+      102: "听见鸟群回来的声音",
+      107: "为我守候的人是你",
+      110: "给了我坚定的信心",
+      114: "双手弹奏出黎明",
+      116: "原来爱如此的动听",
+      135: "鸟群离开了森林",
+      138: "整座天空很灰心",
+      142: "蝴蝶不再被吸引",
+      145: "玫瑰盛开的很安静",
+      148: "远方的风雨不停",
+      152: "城市苍白而孤寂",
+      156: "徘徊无助的人群",
+      159: "焦虑着何时放晴",
+      162: "故事里能毁坏的只有风景",
+      166: "谁也摧毁不了我们的梦境",
+      169: "弦月旁的流星划过了天际",
+      172: "我许下 的愿望 该向谁 去说明",
+      176: "陨石在浩瀚的宇宙间旅行",
+      179: "璀璨的夜空里漫天的水晶",
+      183: "我的祷告终于有了回音",
+      187: "我是如此相信",
+      190: "在背后支撑的是你",
+      194: "一直与我并肩而行",
+      197: "仰望等太阳升起",
+      200: "听见鸟群回来的声音",
+      204: "为我守候的人是你",
+      207: "给了我坚定的信心",
+      211: "双手弹奏出黎明",
+      213: "原来爱如此的动听",
+      217: "我是如此相信",
+      218: "在背后支撑的是你",
+      221: "一直与我并肩而行",
+      225: "仰望等太阳升起",
+      227: "听见鸟群回来的声音",
+      232: "为我守候的人是你",
+      235: "给了我坚定的信心",
+      239: "双手弹奏出黎明",
+      241: "原来爱如此的动听"
+    }
     
+    function makeRange (start, end) {
+      const arr = []
+      let index = 0
+      for (let i = start; i < end; i++) {
+        arr[index] =i
+        index++
+      }
+      return arr
+    }
+    // 举例:对象数字索引0到12之间只有0和12有值,就把[0, 12)填充为0的值
+    function makeSparseToDense (obj) {
+      const keys = Object.keys(obj)
+      const arr = []
+      for (let i = 0; i < keys.length - 1; i++) {
+        const preKey = keys[i]
+        const nextKey = keys[i + 1]
+        const value = obj[preKey]
+        const rangIndexArr = makeRange(preKey, nextKey)
+        rangIndexArr.forEach((idx) => {
+          arr[idx] = value
+        })
+      }
+      arr[keys.length - 1] = obj[keys[keys.length - 1]]
+      return arr
+    }
+    let arr = makeSparseToDense(obj)
+    console.info(arr)
   </script>
 </body>

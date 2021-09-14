@@ -28,8 +28,8 @@
           <div class="middle-r" ref="moveBox">
             <div class="lyric-wrapper" ref="lyricWrapper">
               <ul v-if="playingLyric !== null">
-                <li v-for="(text, index) in playingLyric.body" :key="index">
-                  <p ref="item" class="text" :class="{ active: currentLine === Number(index) }" v-if="text !== ''">
+                <li v-for="(text, index) in playingLyric.body" :idx="index" :key="index">
+                  <p ref="item" class="text" :class="{ active: Number(currentLine) === Number(index) }" v-if="text !== ''">
                     {{text}}
                   </p>
                 </li>
@@ -38,9 +38,9 @@
           </div>
         </div>
         <div class="bottom">
-          <div class="dot-wrapper" ref="dotWrapper">
-            <span class="dot" :class="{active: activeIndex === 1}" :index="1"></span>
-            <span class="dot" :class="{active: activeIndex === 2}" :index="2"></span>
+          <div class="dot-wrapper">
+            <span class="dot" :class="{active: activeIndex === 1}"></span>
+            <span class="dot" :class="{active: activeIndex === 2}"></span>
           </div>
           <div class="process-wrapper">
             <span class="time time-left">{{formate(state.currentTime)}}</span>
@@ -217,8 +217,8 @@ export default defineComponent({
       const duration = currentSong.value.duration
       const audio = audioEl.value
       const time = duration * toFixed2((Math.floor(process) / 100))
+      state.currentTime = time
       audio.currentTime = time
-      console.info(process)
     }
     const moveChangeHandle = (process) => {
       const duration = currentSong.value.duration

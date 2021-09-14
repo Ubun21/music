@@ -2,6 +2,7 @@
 const timeRegExp = /\[(\d{2}):([\d]{2})\.\d{2}\]([^\n]*)\n/g
 // eslint-disable-next-line
 const tiRegExp = /\[(\w*):([^\]]*)\]/g
+let timeMapElementIdx = []
 
 export default function parserLyric (str) {
   const lyric = {
@@ -20,7 +21,48 @@ export default function parserLyric (str) {
     const seconds = result[2]
     const text = result[3]
     const time = Number(minute) * 60 + Number(seconds)
-    lyric.body[time] = text
+    if (text !== '') {
+      lyric.body[time] = text
+    }
   }
-  return lyric
+  const makeRange = (start, end) => {
+    const arr = []
+    let index = 0
+    for (let i = start; i < end; i++) {
+      arr[index] = i
+      index++
+    }
+    return arr
+  }
+  // 举例:对象数字索引0到12之间只有0和12有值,就把[0, 12)填充为0的值
+  const makeSparseToDense = (obj) => {
+    const keys = Object.keys(obj)
+    const arr = {}
+    for (let i = 0; i < keys.length - 1; i++) {
+      const preKey = keys[i]
+      const nextKey = keys[i + 1]
+      const value = obj[preKey]
+      // if (preKey === '98' || preKey === '99') {
+      //   debugger
+      // }
+      const rangIndexArr = makeRange(Number(preKey), Number(nextKey))
+      rangIndexArr.forEach((idx) => {
+        arr[idx] = {
+          lyric: value,
+          head: preKey
+        }
+      })
+    }
+    arr[keys[keys.length - 1]] = {
+      lyric: obj[keys[keys.length - 1]],
+      head: keys[keys.length - 1]
+    }
+    return arr
+  }
+  timeMapElementIdx = makeSparseToDense(lyric.body)
+  console.info(timeMapElementIdx)
+  return {
+    parsetedLyric: lyric,
+    timeMapElementIdx
+  }
 }

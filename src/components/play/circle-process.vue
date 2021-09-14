@@ -46,9 +46,9 @@ export default defineComponent({
     const playing = computed(() => {
       const isPlaying = store.state.playing
       if (isPlaying) {
-        return 'icon-play-mini'
+        return 'icon-pause-mini'
       }
-      return 'icon-pause-mini'
+      return 'icon-play-mini'
     })
     const pause = () => {
       props.pauseHandle()

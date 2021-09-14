@@ -21,7 +21,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const cls = ref('running')
+    const cls = ref('pause')
     const store = useStore()
     const playing = computed(() => store.state.playing)
     const borderStyle = computed(() => {
