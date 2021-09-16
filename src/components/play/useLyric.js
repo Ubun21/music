@@ -24,13 +24,13 @@ export default function useLyric (state) {
     return index
   }
   const findLyricHeadByIndex = (index) => {
-    if (index === 'undefined') {
+    if (index === 'undefined' || !playingLyric.value) {
       return
     }
     const keys = Object.keys(playingLyric.value.body)
     return keys[index]
   }
-
+  let lastIndex = -1
   watch(
     currentTime,
     (newTime) => {
@@ -38,15 +38,19 @@ export default function useLyric (state) {
       const lyricWrapperEl = lyricWrapper.value
       const itemHeight = item.value.clientHeight
       currentLine.value = findLyricHeadByIndex(index)
+      if (lastIndex === index) {
+        return
+      }
       if (index < 6) {
+        lastIndex = index
         lyricWrapperEl.scrollTop = 0
         return
       }
       const scrollTop = itemHeight * index - itemHeight * 5
       lyricWrapperEl.scrollTop = scrollTop
+      lastIndex = index
     }
   )
-
   watch(
     currentSong,
     async (newSong) => {
@@ -59,13 +63,24 @@ export default function useLyric (state) {
       playingLyric.value = parsetedLyric
       timeMapElementArray.value = timeMapElementIdx
       currentLine.value = 0
+      lastIndex = -1
+      state.indicatorLineTime = 0
       if (lyricWrapperEl) {
         lyricWrapperEl.scrollTop = 0
       }
     }
   )
+  // watch(
+  //   () => state.songReady,
+  //   (ready) => {
+  //     if (ready) {
+  //       console.info('come from useLyric', lyricWrapper.value.children)
+  //     }
+  //   }
+  // )
   return {
     timeMapElementArray,
+    findLyricHeadByIndex,
     playingLyric,
     currentLine,
     lyricWrapper,

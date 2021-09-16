@@ -211,12 +211,6 @@ export default defineComponent({
         })
       }
     )
-    watch(
-      () => items.value,
-      (val) => {
-        console.info(val)
-      }
-    )
     return {
       root,
       pre,

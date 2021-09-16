@@ -1,29 +1,29 @@
 <template>
-  <div class="home-wrapper">
-    <tab @active="hanldChange" :index="data.index"></tab>
-    <carousel :index="data.index" :fclick="true" :loop="false" @active="active">
-      <carousel-item>
-        <suspense>
-          <recommend></recommend>
-        </suspense>
-      </carousel-item>
-      <carousel-item>
-        <suspense>
-          <singer :activeIndex="data.index" @select="onSelect"></singer>
-        </suspense>
-      </carousel-item>
-      <carousel-item>
-        <ranking></ranking>
-      </carousel-item>
-      <carousel-item>
-        <me></me>
-      </carousel-item>
-    </carousel>
-  </div>
+    <div class="home-wrapper">
+      <tab @active="hanldChange" :index="data.index"></tab>
+      <carousel :index="data.index" :fclick="true" :loop="false" @active="active">
+        <carousel-item>
+          <suspense>
+            <recommend></recommend>
+          </suspense>
+        </carousel-item>
+        <carousel-item>
+          <suspense>
+            <singer :activeIndex="data.index" @select="onSelect"></singer>
+          </suspense>
+        </carousel-item>
+        <carousel-item>
+          <ranking></ranking>
+        </carousel-item>
+        <carousel-item>
+          <me></me>
+        </carousel-item>
+      </carousel>
+    </div>
 </template>
 
 <script>
-import { defineComponent, reactive, onMounted } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import Carousel from '../components/carousel/main'
 import CarouselItem from '../components/carousel/item'
 import { Singer, Recommend, Ranking, Me } from './pages/index'
@@ -47,9 +47,6 @@ export default defineComponent({
       flick: false
     })
     const router = useRouter()
-    onMounted(() => {
-
-    })
     const hanldChange = (e) => {
       data.index = e
     }

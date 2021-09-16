@@ -1,32 +1,32 @@
 <template>
-  <div class="music-list" ref="list">
-    <div class="title" ref="head">
-      <div class="back">
-        <button @click="clickHandle">back</button>
+    <div class="music-list" v-if="propsDataIsReady">
+      <div class="title" ref="head">
+        <div class="back">
+          <button @click="clickHandle">back</button>
+        </div>
+        <h1 class="text">{{title}}</h1>
       </div>
-      <h1 class="text">{{title}}</h1>
-    </div>
-    <div class="bg-image-wrapper">
-      <div class="bg-image" :style="bgImageStyle">
+      <div class="bg-image-wrapper">
+        <div class="bg-image" :style="bgImageStyle">
+        </div>
+      </div>
+      <div class="list-wrapper"
+        @touchstart="start"
+        @touchmove="move"
+        @touchend="end"
+        :style="styleHeight"
+        ref="listWrapper"
+      >
+        <song-list
+          :songs="songs"
+          @selectItem="selectHandle"
+        ></song-list>
       </div>
     </div>
-    <div class="list-wrapper"
-      @touchstart="start"
-      @touchmove="move"
-      @touchend="end"
-      :style="styleHeight"
-      ref="listWrapper"
-    >
-      <song-list
-        :songs="songs"
-        @selectItem="selectHandle"
-      ></song-list>
-    </div>
-  </div>
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import SongList from '../song-list/index'
@@ -42,33 +42,29 @@ export default defineComponent({
   },
   setup (props) {
     const state = reactive({
-      paddingTop: 0, // 用来设置bgImage的高度
+      paddingTop: 375 * 0.7, // 用来设置bgImage的高度
       maxTranslate: 0,
       titleHeight: 0,
       filteValue: 0,
       overflow: 'hidden',
       scale: 1
     })
-    const router = useRouter() // 用来返回上级
-    const list = ref(null) // 用来计算父容器的宽度
+    const router = useRouter()
     const head = ref(null) // 用来计算title的高度
     const store = useStore()
     const listWrapper = ref(null) // 用来得到scrollTop
+    const propsDataIsReady = computed(() => {
+      if (props.songs !== null && props.pic !== null && props.title !== null) {
+        return true
+      }
+      return false
+    })
     const styleHeight = computed(() => {
       const { height } = window.visualViewport
       const result = height - state.paddingTop
       return {
         height: `${result}px`,
         overflow: state.overflow
-      }
-    })
-    onMounted(() => {
-      if (list.value) {
-        const { width } = list.value.getBoundingClientRect()
-        const titleHeight = head.value.clientHeight
-        state.maxTranslate = width * 0.7
-        state.titleHeight = titleHeight
-        state.paddingTop = state.maxTranslate
       }
     })
     let startY = 0
@@ -83,11 +79,6 @@ export default defineComponent({
       console.info(dx)
       const paddingTop = state.paddingTop
       const temp = paddingTop + dx - lastDx
-      // if ((dx < 0 && temp <= state.titleHeight) || (dx > 0 && temp >= state.maxTranslate)) {
-      //   if (te)
-      //   return
-      // }
-      // 往上拉到bgImage最小值之后，不再移动，同时设置overflow为auto
       if (dx < 0 && temp <= state.titleHeight) {
         state.overflow = 'auto'
         return
@@ -151,8 +142,8 @@ export default defineComponent({
     return {
       state,
       bgImageStyle,
+      propsDataIsReady,
       height,
-      list,
       head,
       listWrapper,
       start,

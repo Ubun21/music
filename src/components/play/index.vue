@@ -13,9 +13,9 @@
           <h2 class="subtitle">{{currentSong.singer}}</h2>
         </div>
         <div class="middle"
-          @touchstart="onMiddleStart"
-          @touchmove="onMiddleMove"
-          @touchend="onMiddleEnd"
+          @touchstart.stop="onMiddleStart"
+          @touchmove.stop="onMiddleMove"
+          @touchend.stop="onMiddleEnd"
           @contextmenu="e => e.preventDefault()"
           ref="animationWrapper"
         >
@@ -26,11 +26,12 @@
             </div>
           </div>
           <div class="middle-r" ref="moveBox">
-            <div class="lyric-wrapper" ref="lyricWrapper">
+            <div class="lyric-wrapper"
+              ref="lyricWrapper">
               <ul v-if="playingLyric !== null">
                 <li v-for="(text, index) in playingLyric.body" :idx="index" :key="index">
                   <p ref="item" class="text" :class="{ active: Number(currentLine) === Number(index) }" v-if="text !== ''">
-                    {{text}}
+                    {{text}} {{index}}
                   </p>
                 </li>
               </ul>
@@ -97,6 +98,7 @@ import useChangeMode from './useChangeMode'
 import useFavorite from './useFavorite'
 import useAnimation from './useAnimation'
 import useLyric from './useLyric'
+import interSection from './intersectionObserver'
 import { useStore } from 'vuex'
 import { formate, toFixed2 } from '../../assets/js/utils'
 
@@ -261,6 +263,42 @@ export default defineComponent({
         }
       }
     )
+    // 观察playingLyric是否渲染出来
+    const callback = (entries, observer) => {
+      if (entries[0].isIntersecting && state.lyricScrolling) {
+        const el = entries[0].target
+        const time = Number(el.getAttribute('idx'))
+        state.indicatorLineTime = time
+        console.info(state.indicatorLineTime)
+        console.info('time', time)
+      }
+    }
+
+    watch(
+      item,
+      (list) => {
+        if (list) {
+          const root = lyricWrapper.value
+          const items = root.children[0]?.children
+          if (items) {
+            items.forEach((item) => {
+              const { startObserver } = interSection(root, item, callback)
+              startObserver()
+            })
+          }
+        }
+      }
+    )
+    // watch(
+    //   state.currentTime,
+    //   (newTime) => {
+    //     if (!newTime) {
+    //       return
+    //     }
+    //     const audio = audioEl.value
+    //     audio.currentTime = newTime
+    //   }
+    // )
     return {
       state,
       audioEl,
@@ -374,6 +412,14 @@ export default defineComponent({
           }
         }
       }
+    }
+    .indicator-line {
+      position: fixed;
+      top: 288px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: green;
     }
     .bottom {
       position: absolute;

@@ -110,9 +110,6 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     transform: translateX(-50%);
-    // height: 36px;
-    // width: 36px;
-    // top: -15px;
     height: 20px;
     width: 20px;
     top: -9px;

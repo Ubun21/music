@@ -1,13 +1,18 @@
 <template>
-  <music-list
-    :songs="data.songs"
-    :title="data.title"
-    :pic="data.pic"
-    ></music-list>
+  <transition name="switch">
+    <div v-if="data.songs">
+      <music-list
+        :songs="data.songs"
+        :title="data.title"
+        :pic="data.pic"
+      >
+      </music-list>
+    </div>
+  </transition>
 </template>
 
 <script>
-import { defineComponent, onBeforeMount, reactive } from 'vue'
+import { defineComponent, onBeforeMount, onDeactivated, reactive, ref } from 'vue'
 import MusicList from '../components/music-list/index'
 import { useRoute } from 'vue-router'
 import { getSingerDetail } from '../service/singer'
@@ -23,6 +28,7 @@ export default defineComponent({
       title: null,
       pic: null
     })
+    const classes = ref([])
     const router = useRoute()
     onBeforeMount(async () => {
       const songs = await getSingerDetail({ mid: router.query.id })
@@ -31,9 +37,37 @@ export default defineComponent({
       data.title = router.query.name
       data.pic = router.query.pic
     })
+    onDeactivated(() => {
+    })
     return {
-      data
+      data,
+      classes
     }
   }
 })
 </script>
+
+<style lang="scss" scoped>
+@keyframes slidein {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+@keyframes slideout {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.active {
+  animation: slidein .3s linear;
+}
+.leave {
+  animation: slideout .3s linear;
+}
+</style>

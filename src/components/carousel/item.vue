@@ -40,6 +40,7 @@ export default defineComponent({
 
     const instance = getCurrentInstance()
     const scopeCarousel = inject('CarouselChildren')
+    const minDinstance = 12
 
     let called = false
     const itemStyle = computed(() => {
@@ -157,15 +158,14 @@ export default defineComponent({
       if (notMove) {
         return
       }
-
       const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
       const fclick = scopeCarousel.isFclick.value
       const speed = fclick ? 0.3 : 1
       let direction = 0
-      if ((dx < -width / 2) || (fclick && dx < 0)) {
+      if ((dx < -width / 2) || (fclick && dx < -minDinstance)) {
         direction = -1
-      } else if ((dx > width / 2) || ((fclick && dx > 0))) {
+      } else if ((dx > width / 2) || ((fclick && dx > minDinstance))) {
         direction = 1
       }
       const timeLine = new TimeLine()
