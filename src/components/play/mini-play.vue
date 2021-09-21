@@ -5,7 +5,7 @@
         <rotate :url="currentSong.pic" :borderWidth="1"></rotate>
       </div>
       <div class="center">
-        <carousel @active="activeIndexChangeHandle" :loop="false" :fclick="true">
+        <carousel @active="activeIndexChangeHandle" :loop="false" :fclick="true" :index="currentIndex">
           <carousel-item v-for="(item, index) in playList" :key="index">
             <h2 class="song-name">{{item.name}}</h2>
             <p class="singer-name">{{item.singer}}</p>
@@ -48,6 +48,9 @@ export default defineComponent({
     const setFullState = () => {
       store.dispatch('setFullScreen', true)
     }
+    const currentIndex = computed(() => {
+      return store.state.currentIndex
+    })
     const activeIndexChangeHandle = (index) => {
       store.dispatch('setCurrentIndex', index)
       store.dispatch('setPlayState', false)
@@ -56,6 +59,7 @@ export default defineComponent({
       fullScreen,
       currentSong,
       playList,
+      currentIndex,
       setFullState,
       activeIndexChangeHandle
     }

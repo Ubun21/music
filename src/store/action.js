@@ -54,3 +54,7 @@ export function removeFavourite ({ commit }, item) {
   commit('removeFavourite', item)
   removeFavouriteStroage(key, item)
 }
+
+export function setVisiual ({ commit }, payload) {
+  commit('setVisiual', payload)
+}

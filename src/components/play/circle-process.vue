@@ -26,19 +26,25 @@
       <i class="icon-mini" :class="playing"></i>
     </div>
     <div class="control-right">
-      <i class="icon-playlist"></i>
+      <i class="icon-playlist" @touchstart.stop="touchHandle"></i>
     </div>
   </div>
+  <playing-list></playing-list>
 </template>
 
 <script>
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
+import PlayingList from './playinglist'
 import { useStore } from 'vuex'
 export default defineComponent({
   name: 'CircleProcess',
   props: ['radius', 'process', 'pauseHandle'],
+  components: {
+    PlayingList
+  },
   setup (props) {
     const store = useStore()
+    const visiual = ref(false)
     const dashArray = computed(() => Math.PI * 100)
     const dashOffset = computed(() => {
       return (1 - props.process) * Math.PI * 100
@@ -53,11 +59,16 @@ export default defineComponent({
     const pause = () => {
       props.pauseHandle()
     }
+    const touchHandle = () => {
+      store.dispatch('setVisiual', true)
+    }
     return {
       dashArray,
       dashOffset,
       pause,
-      playing
+      visiual,
+      playing,
+      touchHandle
     }
   }
 })

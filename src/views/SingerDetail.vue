@@ -33,6 +33,7 @@ export default defineComponent({
     onBeforeMount(async () => {
       const songs = await getSingerDetail({ mid: router.query.id })
       const result = await processSongs(songs.songs)
+      console.info(result)
       data.songs = result
       data.title = router.query.name
       data.pic = router.query.pic

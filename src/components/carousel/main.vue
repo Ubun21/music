@@ -153,6 +153,9 @@ export default defineComponent({
         if (props.loop) {
           data.timer = setTimeout(nextPic, 2000)
         }
+
+        // 修正carousel item的位置
+        adjust(props.index)
       })
     })
     onBeforeUnmount(() => {
@@ -198,19 +201,30 @@ export default defineComponent({
           return
         }
         // todo 有待优化
-        const width = offsetWidth.value
-        const currPos = -width * curr
-        const otherPos = -width * curr + width
-        const currItem = items.value[curr]
-        currItem.setTranslate = currPos
-        items.value.forEach((item, index) => {
-          if (index === curr) {
-            return
-          }
-          item.setTranslate = otherPos
-        })
+        adjust(curr)
       }
     )
+    const adjust = (position) => {
+      const curr = position
+      if (!data.childReady && data.childLength) {
+        return
+      }
+      if (curr < 0 && curr > data.childLength) {
+        return
+      }
+      // todo 有待优化
+      const width = offsetWidth.value
+      const currPos = -width * curr
+      const otherPos = width * curr + width
+      const currItem = items.value[curr] // carousel子元素可以见到的元素
+      currItem.setTranslate = currPos // carousel子元素可见的位置
+      items.value.forEach((item, index) => {
+        if (index === curr) {
+          return
+        }
+        item.setTranslate = otherPos // 其他不可见的元素平移到一个不会干扰可见元素的位置
+      })
+    }
     return {
       root,
       pre,

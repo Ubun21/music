@@ -25,6 +25,9 @@ const mutations = {
     if (index > -1) {
       state.favourite.splice(index, 1)
     }
+  },
+  setVisiual (state, payload) {
+    state.visiual = payload
   }
 }
 
