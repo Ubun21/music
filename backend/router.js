@@ -195,7 +195,6 @@ function registerRecommend(app) {
 
           albums.push(albumItem)
         }
-        console.info(sliders)
         // 往前端发送一个标准格式的响应数据，包括成功错误码和数据
         res.json({
           code: ERR_OK,
@@ -637,7 +636,7 @@ function registerHotKeys(app) {
 // 注册搜索查询接口
 function registerSearch(app) {
   app.get('/api/search', (req, res) => {
-    const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+    const url = 'https://shc.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 
     const { query, page, showSinger } = req.query
 

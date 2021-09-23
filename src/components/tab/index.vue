@@ -23,7 +23,7 @@ export default defineComponent({
   },
   setup (props, contenxt) {
     const data = reactive({
-      items: ['推荐', '歌手', '搜索', '我'],
+      items: ['推荐', '歌手', '排行榜', '搜索'],
       index: 0
     })
     const clickHandle = (e) => {
