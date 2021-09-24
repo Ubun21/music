@@ -28,8 +28,8 @@ export default defineComponent({
     onBeforeMount(async () => {
       const res = await getTopList()
       data.value = res.topList
-      console.info('res', res)
-      console.info(data.value)
+      // console.info('res', res)
+      // console.info(data.value)
     })
     return {
       data
