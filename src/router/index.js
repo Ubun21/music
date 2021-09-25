@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/home.vue'
 import SingerDetail from '../views/SingerDetail'
+import TopDetail from '../views/topDetail'
+import RecomDetail from '../views/recomDetail'
 
 const routes = [
   {
@@ -13,6 +15,14 @@ const routes = [
     path: '/singer/',
     component: SingerDetail,
     meta: { transition: 'slider' }
+  },
+  {
+    path: '/top/',
+    component: TopDetail
+  },
+  {
+    path: '/album/',
+    component: RecomDetail
   }
 ]
 

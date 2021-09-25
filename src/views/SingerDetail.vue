@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { defineComponent, onBeforeMount, onDeactivated, reactive, ref } from 'vue'
+import { defineComponent, onBeforeMount, reactive, ref } from 'vue'
 import MusicList from '../components/music-list/index'
 import { useRoute } from 'vue-router'
 import { getSingerDetail } from '../service/singer'
@@ -33,12 +33,9 @@ export default defineComponent({
     onBeforeMount(async () => {
       const songs = await getSingerDetail({ mid: router.query.id })
       const result = await processSongs(songs.songs)
-      console.info(result)
       data.songs = result
       data.title = router.query.name
       data.pic = router.query.pic
-    })
-    onDeactivated(() => {
     })
     return {
       data,

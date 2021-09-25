@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <ul class="top-list">
-      <li class="item" v-for="(item, index) in data" :key="index">
+      <li class="item" v-for="(item, index) in data" @touchstart="selectTop(item)" :key="index">
         <div class="left">
           <img height="100" width="100" :src="item.pic" />
         </div>
@@ -21,18 +21,29 @@
 <script>
 import { defineComponent, onBeforeMount, ref } from 'vue'
 import { getTopList } from '../../service/top'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'ranking',
   setup () {
     const data = ref(null)
+    const router = useRouter()
     onBeforeMount(async () => {
       const res = await getTopList()
       data.value = res.topList
       // console.info('res', res)
       // console.info(data.value)
     })
+    const selectTop = (top) => {
+      router.push({
+        path: '/top/',
+        query: {
+          ...top
+        }
+      })
+    }
     return {
-      data
+      data,
+      selectTop
     }
   }
 })

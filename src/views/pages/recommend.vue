@@ -12,7 +12,7 @@
     <div class="list-wrapper">
       <h1 class="list-title">热门推荐</h1>
       <ul class="list-content">
-        <li class="list-content-item" v-for="item in albums" :key="item">
+        <li class="list-content-item" v-for="item in albums" :key="item" @touchstart="selectionAlbum(item)">
           <div class="icon">
             <img :src="item.pic">
           </div>
@@ -31,6 +31,7 @@ import { defineComponent, ref } from 'vue'
 import Carousel from '../../components/carousel/main.vue'
 import CarouselItem from '../../components/carousel/item.vue'
 import { getRecommend } from '../../service/recomment'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'recommend',
   components: {
@@ -40,7 +41,16 @@ export default defineComponent({
   async setup () {
     const sliders = ref([])
     const albums = ref([])
-    const selectionAlbum = ref(null)
+    const router = useRouter()
+    const selectionAlbum = (ablum) => {
+      debugger
+      router.push({
+        path: '/album/',
+        query: {
+          ...ablum
+        }
+      })
+    }
 
     const result = await getRecommend()
     sliders.value = result.sliders
