@@ -37,7 +37,7 @@ export default defineComponent({
       translate: 0,
       position: null
     })
-
+    let mouseMove = false
     const instance = getCurrentInstance()
     const scopeCarousel = inject('CarouselChildren')
     const minDinstance = 12
@@ -149,8 +149,13 @@ export default defineComponent({
       currItem.setTranslate = base + dx
       preItem.setTranslate = preBase + dx
       nextItem.setTranslate = nextBase + dx
+
+      mouseMove = true
     }
     const end = (e) => {
+      if (!mouseMove) {
+        return
+      }
       const moveX = getClientX(e)
       const moveY = getClientY(e)
       const ang = angle360(startX, startY, moveX, moveY)
@@ -195,6 +200,7 @@ export default defineComponent({
       timeLine.add(curAnimation)
       timeLine.add(nextAnimation)
       timeLine.start()
+      startX = 0
       scopeCarousel.data.activeIndex = (data.position - direction + length) % length
       context.emit('active', scopeCarousel.data.activeIndex)
       if (scopeCarousel.loop) {

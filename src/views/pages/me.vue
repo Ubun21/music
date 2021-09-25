@@ -13,18 +13,27 @@
       <div class="search-history">
         <div class="search-history-title">
           <span class="text">历史搜索</span>
-          <span class="clear">
+          <span class="clear" @touchstart.stop="openConfirm">
             <i class="icon-clear"></i>
           </span>
         </div>
-        <div class="search-history-content"></div>
+        <div class="search-history-list">
+          <ul>
+            <li class="history-item" v-for="(item, index) in searchHis" :key="index">
+              <span class="name">{{item.name}}</span>
+              <span class="icon">
+                <i class="icon-delete" @touchstart.stop="deleHistorySongItem(item)"></i>
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div class="search-result" v-if="query">
+    <div class="search-result" @touchstart.stop v-if="query">
       <scroll @intersection="loadMore">
         <ul v-if="searchRes" class="search-result-list">
           <li v-for="(item, index) in searchRes" :key="index">
-            <div class="song">
+            <div class="song" @touchstart.stop="selectSong(item)">
               <span class="song-icon">
                 <i class="icon-music"></i>
               </span>
@@ -37,11 +46,18 @@
       </scroll>
     </div>
   </div>
+  <confirm
+    title="是否清空播放历史"
+    ref="confirmRef"
+    @clear="confirmClear"
+    @cancle="confirmCancle"
+    ></confirm>
 </template>
 
 <script>
 import { defineComponent, ref, watch, onBeforeMount } from 'vue'
 import Scroll from '../../components/scroll/index'
+import Confirm from '../../components/confirm/index'
 import { getHotKeys, search } from '../../service/search'
 import { debounce } from 'lodash'
 import SearchInput from '../../components/input/index'
@@ -49,13 +65,24 @@ export default defineComponent({
   name: 'me',
   components: {
     SearchInput,
-    Scroll
+    Scroll,
+    Confirm
   },
   setup () {
     const query = ref('')
     const hotKeys = ref(null)
+    const confirmRef = ref(null)
     const searchRes = ref([])
+    const searchHis = ref([])
     const page = ref(0)
+    const selectSong = (song) => {
+      const history = searchHis.value
+      const exits = history.some((item) => item.id === song.id)
+      if (exits) {
+        return
+      }
+      searchHis.value.push(song)
+    }
     onBeforeMount(async () => {
       const res = await getHotKeys()
       hotKeys.value = res.hotKeys
@@ -72,7 +99,6 @@ export default defineComponent({
       let res = null
       try {
         res = await search(searchKey, searchPage, showSinger)
-        debugger
       } catch (e) {
         console.info(e)
       }
@@ -82,6 +108,21 @@ export default defineComponent({
       searchRes.value = sourceArr.concat(res.songs)
       page.value += 1
     }
+    const openConfirm = () => {
+      confirmRef.value.openConfirm()
+    }
+    const deleHistorySongItem = (item) => {
+      const id = item.id
+      const history = searchHis.value
+      const newArr = history.filter((item) => item.id !== id)
+      searchHis.value = newArr
+    }
+    const confirmClear = () => {
+      searchHis.value = []
+    }
+    const confirmCancle = () => {
+      confirmRef.value.close()
+    }
     watch(
       query,
       debounce((newVal) => {
@@ -90,14 +131,21 @@ export default defineComponent({
           return
         }
         loadMore()
-      }, 300)
+      }, 600)
     )
     return {
       query,
       hotKeys,
       searchRes,
+      confirmRef,
+      openConfirm,
       hotKeyClicked,
-      loadMore
+      searchHis,
+      selectSong,
+      deleHistorySongItem,
+      loadMore,
+      confirmClear,
+      confirmCancle
     }
   }
 })
@@ -139,6 +187,26 @@ export default defineComponent({
       .search-history-title {
         display: flex;
         justify-content: space-between;
+      }
+      .search-history-list {
+        line-height: 40px;
+        .history-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 100%;
+          .name {
+            flex: 1;
+            display: inline-block;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+          }
+          .icon {
+            text-align: right;
+            font-size: 12px;
+            flex-basis: 36px;
+          }
+        }
       }
     }
   }
