@@ -11,6 +11,7 @@ export default function useAsync (asyncFn) {
       .then((res) => {
         data.value = res
         loading.value = false
+        return res
       }).catch((err) => {
         error.value = err
         loading.value = false

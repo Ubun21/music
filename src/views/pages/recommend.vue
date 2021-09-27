@@ -43,7 +43,6 @@ export default defineComponent({
     const albums = ref([])
     const router = useRouter()
     const selectionAlbum = (ablum) => {
-      debugger
       router.push({
         path: '/album/',
         query: {

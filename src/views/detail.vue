@@ -11,6 +11,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
+import { processSongs } from '../service/song'
 import MusicList from '../components/music-list/index'
 import useAsync from '../hooks/useAsync'
 export default defineComponent({
@@ -27,7 +28,13 @@ export default defineComponent({
     const route = useRoute()
     const song = { ...route.query }
     const { excute, data, loading, error } = useAsync(props.getDataFn)
-    excute(song)
+    excute(song).then((res) => {
+      const result = processSongs(res.songs)
+      return result
+    }).then((songs) => {
+      data.value.songs = songs
+      console.info(song)
+    })
     return {
       song,
       data,
