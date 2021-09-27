@@ -12,7 +12,7 @@
     <div class="list-wrapper">
       <h1 class="list-title">热门推荐</h1>
       <ul class="list-content">
-        <li class="list-content-item" v-for="item in albums" :key="item" @touchstart="selectionAlbum(item)">
+        <li class="list-content-item" v-for="item in albums" :key="item" @click="selectionAlbum(item)">
           <div class="icon">
             <img :src="item.pic">
           </div>

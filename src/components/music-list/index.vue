@@ -1,21 +1,22 @@
 <template>
-    <div class="music-list" v-if="propsDataIsReady">
-      <div class="title" ref="head">
-        <div class="back">
-          <button @click="clickHandle">back</button>
+    <div class="music-list" v-if="songs">
+      <div class="head-wrapper" :style="HeadWrapperStyle">
+        <div ref="bgImageRef" class="head-bgImage" :style="bgImageStyle">
         </div>
-        <h1 class="text">{{title}}</h1>
       </div>
-      <div class="bg-image-wrapper">
-        <div class="bg-image" :style="bgImageStyle">
-        </div>
+      <div class="back">
+        <i class="icon-back" @click="goBack"></i>
+      </div>
+      <div ref="titleRef" class="title">
+        {{title}}
       </div>
       <div class="list-wrapper"
         @touchstart="start"
         @touchmove="move"
         @touchend="end"
-        :style="styleHeight"
-        ref="listWrapper"
+        ref="listWrapperRef"
+        :style="transformStyle"
+        :class="active"
       >
         <song-list
           :songs="songs"
@@ -26,9 +27,10 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref } from 'vue'
+import { defineComponent, ref, onMounted, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { TimeLine, Animation } from '../../lib/animation'
 import SongList from '../song-list/index'
 export default defineComponent({
   name: 'Music-List',
@@ -41,152 +43,179 @@ export default defineComponent({
     pic: String
   },
   setup (props) {
-    const state = reactive({
-      paddingTop: 375 * 0.7, // 用来设置bgImage的高度
-      maxTranslate: 0,
-      titleHeight: 0,
-      filteValue: 0,
-      overflow: 'hidden',
-      scale: 1
-    })
-    const router = useRouter()
-    const head = ref(null) // 用来计算title的高度
     const store = useStore()
-    const listWrapper = ref(null) // 用来得到scrollTop
-    const propsDataIsReady = computed(() => {
-      if (props.songs !== null && props.pic !== null && props.title !== null) {
-        return true
-      }
-      return false
-    })
-    const styleHeight = computed(() => {
-      const { height } = window.visualViewport
-      const result = height - state.paddingTop
-      return {
-        height: `${result}px`,
-        overflow: state.overflow
-      }
-    })
+    const router = useRouter()
+
+    const instance = getCurrentInstance()
+    const bgImageRef = ref(null)
+    const titleRef = ref(null)
+    const listWrapperRef = ref(null)
+    const translateY = ref(0)
+    const scale = ref(1)
+    const blur = ref(0)
+    const isActive = ref(false)
+    let maxTranslateX = 0
     let startY = 0
+    let lastBlur = 0
+    let lastTranslateY = 0
+    const timeLine = new TimeLine()
+    const transformStyle = computed({
+      get () {
+        const style = `translateY(${translateY.value}px)`
+        return {
+          transform: style
+        }
+      },
+      set (val) {
+        if (!val) return
+        translateY.value = val
+      }
+    })
+    const bgImageStyle = computed(() => {
+      const style = {
+        backgroundImage: `url(${props.pic})`,
+        filter: `blur(${blur.value}px)`
+      }
+      return style
+    })
+    const HeadWrapperStyle = computed({
+      get () {
+        const style = {
+          transform: `scale(${scale.value})`
+        }
+        return style
+      },
+      set (val) {
+        if (!val) return
+        scale.value = val
+      }
+    })
+    const active = computed(() => {
+      if (isActive.value) {
+        return 'active'
+      }
+      return ''
+    })
+    onMounted(() => {
+      const bgImageEl = bgImageRef.value
+      const titleEl = titleRef.value
+      maxTranslateX = bgImageEl.clientHeight - titleEl.clientHeight
+    })
     const start = (e) => {
       startY = e.changedTouches[0].clientY
     }
-    // 用来扣除上一次移动已经移动的距离
-    let lastDx = 0
-    const disableTrans = false
     const move = (e) => {
-      const dx = e.changedTouches[0].clientY - startY
-      console.info(dx)
-      const paddingTop = state.paddingTop
-      const temp = paddingTop + dx - lastDx
-      if (dx < 0 && temp <= state.titleHeight) {
-        state.overflow = 'auto'
+      if (!maxTranslateX) {
         return
       }
-      if (listWrapper.value.scrollTop !== 0) {
+      const moveY = e.changedTouches[0].clientY
+      const dx = moveY - startY
+      const percetage = dx / maxTranslateX
+      const move = maxTranslateX * percetage + lastTranslateY
+      const blueValue = lastBlur - 10 * percetage
+      if (dx < 0 && Math.abs(move) >= maxTranslateX) {
+        isActive.value = true
         return
       }
-      // 往上拉到最小值后, overflow为auto，使得song-list的子内容可以滚动
-      // 在song-list scrollTop为0时,往下移动的时候overflow为hide
-      // scrollTop 不为0的时候 往下拉时禁止移动bgImage
-      // 往下拉到bgImage最大值后，不在移动
-      if (dx > 0 && temp >= state.maxTranslate) {
-        state.overflow = 'hidden'
+      if (listWrapperRef.value.scrollTop !== 0) {
         return
       }
-      e.preventDefault()
-      if (!disableTrans) {
-        state.paddingTop = temp
+      if (dx > 0 && listWrapperRef.value.scrollTop === 0) {
+        isActive.value = false
       }
-      upFilterVal(dx)
-      lastDx = dx
-    }
-    let index = 0
-    let lastIndex = 0
-    const upFilterVal = (dx) => {
-      // 用来映射每一段dx距离对于filter的值
-      // const arr = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15]
-      index += Number((dx / state.maxTranslate).toFixed(1) * 10) - lastIndex
-      lastIndex = index
-      state.filteValue = -index
+      if (dx > 0 && move > 0) {
+        // 选择一个比maxTranslate小的多的底数,从而使得scle比translateY快避免出现空隙
+        const baseNumber = 100
+        const percetage = move / baseNumber
+        scale.value = 1 + (1 * percetage)
+        translateY.value = move
+        blur.value = 0
+        lastBlur = 0
+        return
+      }
+      blur.value = blueValue
+      translateY.value = move
+      console.info('translateY', translateY.value)
     }
     const end = (e) => {
-      startY = 0
-      lastDx = 0
-    }
-    const paddingTop = computed(() => {
-      return `${state.paddingTop}px`
-    })
-    const filte = computed(() => {
-      return `blur(${state.filteValue}px)`
-    })
-    const bgImageStyle = computed(() => {
-      return {
-        backgroundImage: `url(${props.pic})`,
-        paddingTop: paddingTop.value,
-        filter: filte.value,
-        transform: `scale(${state.scale})`
+      const dx = e.changedTouches[0].clientY - startY
+      if (dx > 0 && translateY.value > 0) {
+        const transAnimation = new Animation(instance.setupState, 'transformStyle', (v) => v, translateY.value,
+          0, 0, 0.3
+        )
+        const scaleAnimation = new Animation(instance.setupState, 'HeadWrapperStyle', (v) => v, scale.value,
+          1, 0, 0.3
+        )
+        timeLine.add(transAnimation)
+        timeLine.add(scaleAnimation)
+        timeLine.start()
+        lastTranslateY = 0
+        return
       }
-    })
-    const height = computed(() => {
-      const { height } = window.visualViewport
-      const bgHeight = state.paddingTop
-      return height - bgHeight
-    })
-    const clickHandle = () => {
+      lastTranslateY = translateY.value
+      lastBlur = blur.value
+    }
+    const goBack = () => {
       router.go(-1)
     }
     const selectHandle = (list, index) => {
       store.dispatch('selectPlay', { list, index })
     }
     return {
-      state,
+      bgImageRef,
+      titleRef,
+      listWrapperRef,
+      active,
+      transformStyle,
       bgImageStyle,
-      propsDataIsReady,
-      height,
-      head,
-      listWrapper,
+      HeadWrapperStyle,
       start,
       move,
       end,
-      clickHandle,
-      styleHeight,
-      selectHandle
+      selectHandle,
+      goBack
     }
   }
 })
 </script>
-
-<style lang="scss">
+<style lang="scss" scoped>
 .music-list {
+  height: 100vh;
+  overflow: hidden;
+  .head-wrapper {
+    overflow: hidden;
+    .head-bgImage {
+      padding-top: 70%;
+      background-size: cover;
+    }
+  }
+  .back {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    .icon-back {
+      display: block;
+      padding: 10px;
+      font-size: 22px;
+      color: #ffcd32
+    }
+  }
   .title {
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
+    left: 10%;
+    width: 80%;
     text-align: center;
-    z-index: 20;
-    .back {
-      position: absolute;
-    }
-    .text {
-      flex: 1;
-      font-size: 18px;
-      color: aquamarine;
-    }
-  }
-  .bg-image-wrapper {
-    overflow: hidden; // 用来解决边界被blur的问题
-    .bg-image {
-      background-size: cover;
-      filter: blur(0px);
-    }
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
   }
   .list-wrapper {
     background: green;
-    overflow: hidden;
+  }
+  .list-wrapper.active {
+    height: calc(100vh - 40px);
+    overflow: auto;
   }
 }
 </style>

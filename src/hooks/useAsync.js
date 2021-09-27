@@ -9,11 +9,9 @@ export default function useAsync (asyncFn) {
     loading.value = true
     return asyncFn(para)
       .then((res) => {
-        debugger
         data.value = res
         loading.value = false
       }).catch((err) => {
-        debugger
         error.value = err
         loading.value = false
       })

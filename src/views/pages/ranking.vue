@@ -1,7 +1,7 @@
 <template>
   <div class="ranking">
     <ul class="top-list">
-      <li class="item" v-for="(item, index) in data" @touchstart="selectTop(item)" :key="index">
+      <li class="item" v-for="(item, index) in data" @click="selectTop(item)" :key="index">
         <div class="left">
           <img height="100" width="100" :src="item.pic" />
         </div>

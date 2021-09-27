@@ -31,7 +31,6 @@
               <ul v-if="playingLyric !== null">
                 <li v-for="(text, index) in playingLyric.body" :idx="index" :key="index">
                   <p ref="item" class="text" :class="{ active: Number(currentLine) === Number(index) }" v-if="text !== ''">
-                    {{text}} {{index}}
                   </p>
                 </li>
               </ul>
@@ -401,6 +400,8 @@ export default defineComponent({
         .lyric-wrapper {
           height: 100%;
           overflow: auto;
+          -ms-overflow-style: none;
+          scrollbar-width: none;
           .text {
             color: rgba(255, 255, 255, 0.5);
             font-size: 14px;
@@ -410,6 +411,9 @@ export default defineComponent({
           .text.active {
             color: #fff;
           }
+        }
+        .lyric-wrapper::-webkit-scrollbar {
+          display: none;
         }
       }
     }
