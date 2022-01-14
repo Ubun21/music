@@ -20,6 +20,7 @@ import {
   watch
 } from 'vue'
 import { Animation, TimeLine } from '@/lib/animation.js'
+let loopTimeId = null
 export default defineComponent({
   name: 'CarouselItem',
   props: {
@@ -204,7 +205,8 @@ export default defineComponent({
       scopeCarousel.data.activeIndex = (data.position - direction + length) % length
       context.emit('active', scopeCarousel.data.activeIndex)
       if (scopeCarousel.loop) {
-        setTimeout(scopeCarousel.nextPic, 2000)
+        clearTimeout(loopTimeId)
+        loopTimeId = setTimeout(scopeCarousel.nextPic, 2000)
       }
     }
     const getTriple = () => {
