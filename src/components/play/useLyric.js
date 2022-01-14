@@ -16,7 +16,7 @@ export default function useLyric (state) {
   const findLyricIndexByTime = (time) => {
     time = Math.floor(time)
     const lyric = timeMapElementArray.value[time]
-    const keys = Object.keys(playingLyric.value.body)
+    const keys = Object.keys(playingLyric.value && playingLyric.value.body)
     if (!lyric || !lyric.head) {
       return
     }
@@ -61,7 +61,6 @@ export default function useLyric (state) {
       const lyric = await getLyric(newSong)
       const { parsetedLyric, timeMapElementIdx } = parserLyric(lyric)
       playingLyric.value = parsetedLyric
-      debugger
       timeMapElementArray.value = timeMapElementIdx
       currentLine.value = 0
       lastIndex = -1
@@ -71,14 +70,6 @@ export default function useLyric (state) {
       }
     }
   )
-  // watch(
-  //   () => state.songReady,
-  //   (ready) => {
-  //     if (ready) {
-  //       console.info('come from useLyric', lyricWrapper.value.children)
-  //     }
-  //   }
-  // )
   return {
     timeMapElementArray,
     findLyricHeadByIndex,

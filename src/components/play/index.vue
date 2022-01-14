@@ -31,6 +31,7 @@
               <ul v-if="playingLyric !== null">
                 <li v-for="(text, index) in playingLyric.body" :idx="index" :key="index">
                   <p ref="item" class="text" :class="{ active: Number(currentLine) === Number(index) }" v-if="text !== ''">
+                    {{ text }}
                   </p>
                 </li>
               </ul>
@@ -136,6 +137,7 @@ export default defineComponent({
     const { modeIcon, changeMode } = useChangeMode()
     const { getIconFavourite, changefavouriteStatus } = useFavorite()
     const { activeIndex, opacity, animationWrapper, moveBox, opacityBox, onMiddleStart, onMiddleMove, onMiddleEnd } = useAnimation()
+    debugger
     const { playingLyric, currentLine, lyricWrapper, item } = useLyric(state)
     const goBack = () => {
       // todo 当浏览器的url变化的时候，页面没有退出

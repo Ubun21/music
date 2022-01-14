@@ -3,11 +3,24 @@ const timeRegExp = /\[(\d{2}):([\d]{2})\.\d{2}\]([^\n]*)\n/g
 // eslint-disable-next-line
 const tiRegExp = /\[(\w*):([^\]]*)\]/g
 let timeMapElementIdx = []
+const notFindLyric = '该歌曲暂时无法获取歌词'
 
 export default function parserLyric (str) {
   const lyric = {
     head: {},
     body: {}
+  }
+  debugger
+  if (str.indexOf(notFindLyric) > -1) {
+    return {
+      parsetedLyric: {
+        head: {},
+        body: {
+          0: '该歌曲暂时无法获取歌词'
+        }
+      },
+      timeMapElementIdx
+    }
   }
   const [head, body] = str.split('[offset:0]')
   let result = null
