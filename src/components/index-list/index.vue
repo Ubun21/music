@@ -22,7 +22,7 @@
     <div class="shortcut" v-show="activeIndex === 1">
       <ul>
         <li class="item" :ground-name="item.title" v-for="(item, index) in data.singers" :key="index"
-          :class="{ active: index === state.activeIdx}"
+          :class="{ active: index === activeIdx}"
           @touchstart.passive="onStart"
           @touchmove.passive="onMove"
           @touchend.passive="onEnd"
@@ -46,11 +46,11 @@ export default defineComponent({
     const container = ref(null)
     const indexList = ref(null)
     const titles = ref(null)
+    const activeIdx = ref(0)
     const state = reactive({
       active: false,
       heights: null,
-      indexs: null,
-      activeIdx: 0
+      indexs: null
     })
     onMounted(() => {
       if (indexList.value) {
@@ -67,13 +67,13 @@ export default defineComponent({
       const groundName = e.target.getAttribute('ground-name')
       pos = state.indexs.indexOf(groundName)
       const scrollTop = state.heights.get(groundName)
-      state.activeIdx = pos
+      activeIdx.value = pos
       container.value.scrollTop = scrollTop
     }
     const onMove = (e) => {
       const dx = e.changedTouches[0].clientY - startY
       const step = pos + Math.floor(dx / 16)
-      state.activeIdx = step
+      activeIdx.value = step
       scrollByIdx(step)
     }
     const onEnd = (e) => {
@@ -93,6 +93,7 @@ export default defineComponent({
       indexList,
       titles,
       state,
+      activeIdx,
       onStart,
       onMove,
       onEnd,
@@ -143,7 +144,7 @@ export default defineComponent({
     right: 4px;
     top: 20%;
     padding: 20px 0;
-    width: 20px;
+    width: 14px;
     border-radius: 10px;
     text-align: center;
     .item {
