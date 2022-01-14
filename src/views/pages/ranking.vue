@@ -73,13 +73,17 @@ export default defineComponent({
           padding: 0 20px;
           line-height: 100px;
           height: 100px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
           .list-item {
-            vertical-align: middle;
-            flex: 1 0 195px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
             line-height: 26px;
+            width: 130px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            .index {
+              padding-right: 3px;
+            }
           }
         }
       }
