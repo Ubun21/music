@@ -61,7 +61,6 @@ export default function useLyric (state) {
       const lyric = await getLyric(newSong)
       const { parsetedLyric, timeMapElementIdx } = parserLyric(lyric)
       playingLyric.value = parsetedLyric
-      debugger
       timeMapElementArray.value = timeMapElementIdx
       currentLine.value = 0
       lastIndex = -1

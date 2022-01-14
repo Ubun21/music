@@ -33,7 +33,6 @@ export default defineComponent({
       return result
     }).then((songs) => {
       data.value.songs = songs
-      console.info(song)
     })
     return {
       song,

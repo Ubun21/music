@@ -20,6 +20,7 @@ import {
   watch
 } from 'vue'
 import { Animation, TimeLine } from '@/lib/animation.js'
+let loopTimeId = null
 export default defineComponent({
   name: 'CarouselItem',
   props: {
@@ -75,12 +76,8 @@ export default defineComponent({
       // data.translate = calTranslate(index, activeIndex)
     }
 
-    // const calTranslate = (index, activeIndex) => {
-    //   const width = scopeCarousel.offsetWidth
-    //   return width.value * (index - activeIndex)
-    // }
     onMounted(() => {
-      if (scopeCarousel.addItem) {
+      if (scopeCarousel.addIteqm) {
         scopeCarousel.addItem({
           id: instance.uid,
           instance: instance,
@@ -152,6 +149,8 @@ export default defineComponent({
 
       mouseMove = true
     }
+
+    const timeLine = new TimeLine()
     const end = (e) => {
       if (!mouseMove) {
         return
@@ -166,14 +165,13 @@ export default defineComponent({
       const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
       const fclick = scopeCarousel.isFclick.value
-      const speed = fclick ? 0.3 : 1
+      const speed = fclick ? 0.2 : 1
       let direction = 0
       if ((dx < -width / 2) || (fclick && dx < -minDinstance)) {
         direction = -1
       } else if ((dx > width / 2) || ((fclick && dx > minDinstance))) {
         direction = 1
       }
-      const timeLine = new TimeLine()
       const { length, prePos, nextPos, currItem, preItem, nextItem } = getTriple()
       const preOffset = Math.floor(preItem.setTranslate)
       const currOffset = Math.floor(currItem.setTranslate)
@@ -204,7 +202,10 @@ export default defineComponent({
       scopeCarousel.data.activeIndex = (data.position - direction + length) % length
       context.emit('active', scopeCarousel.data.activeIndex)
       if (scopeCarousel.loop) {
-        setTimeout(scopeCarousel.nextPic, 2000)
+        // timeout 时间内在再次快速滑动取消上次设置的定时器
+        console.info('loopTimeId', loopTimeId)
+        clearTimeout(loopTimeId)
+        loopTimeId = setTimeout(scopeCarousel.nextPic, 3000)
       }
     }
     const getTriple = () => {
