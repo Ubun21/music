@@ -34,6 +34,5 @@ export default defineComponent({
 .singer {
   width: 100vw;
   height: calc(100vh - 44px);
-  background: rebeccapurple;
 }
 </style>

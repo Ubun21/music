@@ -53,7 +53,6 @@ export default defineComponent({
 .ranking {
   width: 100vw;
   height: calc(100vh - 44px);
-  background: rebeccapurple;
   overflow: auto;
   .top-list {
     .item {

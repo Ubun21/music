@@ -60,7 +60,8 @@ export default defineComponent({
     text-align: center;
   }
   .active {
-    background: rebeccapurple;
+    color: #ffcd32;
+    border-bottom: 2px solid #ffcd32;
   }
 }
 </style>

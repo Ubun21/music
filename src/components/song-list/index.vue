@@ -11,12 +11,15 @@
           </p>
         </div>
       </li>
+      <li v-if="!isFullScreenSize" class="space"></li>
     </ul>
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+
 export default defineComponent({
   name: 'SongList',
   props: {
@@ -24,10 +27,13 @@ export default defineComponent({
   },
   emits: ['selectItem'],
   setup (props, { emit }) {
+    const store = useStore()
+    const isFullScreenSize = computed(() => store.state.fullScreen)
     const clickHandle = (songs, index) => {
       emit('selectItem', songs, index)
     }
     return {
+      isFullScreenSize,
       clickHandle
     }
   }
@@ -47,6 +53,9 @@ export default defineComponent({
       text-overflow: ellipsis;
       overflow: hidden;
     }
+  }
+  .space {
+    height: 80px;
   }
 }
 </style>

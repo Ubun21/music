@@ -10,7 +10,6 @@ export default function parserLyric (str) {
     head: {},
     body: {}
   }
-  debugger
   if (str.indexOf(notFindLyric) > -1) {
     return {
       parsetedLyric: {

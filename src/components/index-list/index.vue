@@ -109,10 +109,14 @@ export default defineComponent({
   overflow: scroll;
   .index-list {
     .list-title {
+      height: 27px;
+      font-size: 16px;
       position: sticky;
+      line-height: 27px;
       top: 0px;
       padding-left: 10px;
-      background: red;
+      color: rgba(255, 255, 255, 0.5);
+      background: #333;
     }
     .list-item {
       display: flex;
@@ -134,15 +138,19 @@ export default defineComponent({
   }
   .shortcut {
     position: fixed;
-    background: green;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.3);
     right: 4px;
     top: 20%;
     padding: 20px 0;
     width: 20px;
     border-radius: 10px;
     text-align: center;
+    .item {
+      padding-bottom: 3px;
+    }
     .active {
-      background: yellow;
+      color: yellow;
     }
   }
 }

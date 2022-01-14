@@ -21,17 +21,19 @@
             <p class="text-title">{{item.title}}</p>
           </div>
         </li>
+        <li v-if="!isFullScreen" class="space"></li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import Carousel from '../../components/carousel/main.vue'
 import CarouselItem from '../../components/carousel/item.vue'
 import { getRecommend } from '../../service/recomment'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default defineComponent({
   name: 'recommend',
   components: {
@@ -42,6 +44,8 @@ export default defineComponent({
     const sliders = ref([])
     const albums = ref([])
     const router = useRouter()
+    const store = useStore()
+    const isFullScreen = computed(() => store.state.fullScreen)
     const selectionAlbum = (ablum) => {
       router.push({
         path: '/album/',
@@ -57,6 +61,7 @@ export default defineComponent({
     return {
       sliders,
       albums,
+      isFullScreen,
       selectionAlbum
     }
   }
@@ -66,7 +71,6 @@ export default defineComponent({
 <style lang="scss">
 .recommend {
   width: 100vw;
-  background: rebeccapurple;
   height: calc(100vh - 44px);
   .carousel-wrapper {
     .carousel {
@@ -87,21 +91,20 @@ export default defineComponent({
     height: calc(100vh - 194px);
     flex-direction: column;
     .list-title {
-      height: 65px;
+      color: #ffcd32;
+      height: 30px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: blue;
     }
     .list-content {
       flex: 1;
       overflow: auto;
-      background: red;
       .list-content-item {
         display: flex;
         box-sizing: border-box;
         overflow: hidden;
-        text-overflow: ellipsis;
         padding: 0px 20px 20px 20px;
         .icon {
           padding-right: 20px;
@@ -111,15 +114,20 @@ export default defineComponent({
           }
         }
         .text {
+          font-size: 14px;
           .text-name {
             margin-bottom: 20px;
+            color: #fff;
           }
           .text-title {
-            overflow: hidden;
-            text-overflow: ellipsis;
+            width: 200px;
+            color: rgba(255, 255, 255, 0.3);
           }
         }
       }
+    }
+    .space {
+      height: 80px;
     }
   }
 }
