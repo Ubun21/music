@@ -211,7 +211,7 @@ export default defineComponent({
     color: #fff;
   }
   .list-wrapper {
-    background: green;
+    background: #222222;
   }
   .list-wrapper.active {
     height: calc(100vh - 40px);

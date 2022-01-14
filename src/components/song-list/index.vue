@@ -5,7 +5,7 @@
         @click="clickHandle(songs, index)"
       >
         <div class="item">
-          <h2>{{ item.name }}</h2>
+          <h2 class="name">{{ item.name }}</h2>
           <p class="text">
             {{ item.singer }}|{{item.album}}
           </p>
@@ -40,15 +40,19 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .song-list {
   padding: 20px 30px;
-  background: yellow;
   box-sizing: border-box;
   .item {
     height: 64px;
     font-size: 14px;
+    .name {
+      color: #fff;
+      margin-bottom: 3px;
+    }
     .text {
+      color: rgba(255, 255, 255, 0.3);
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;

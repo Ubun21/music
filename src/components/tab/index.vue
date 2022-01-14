@@ -54,7 +54,7 @@ export default defineComponent({
   display: flex;
   line-height: 44px;
   height: 44px;
-  font-size: 16px;
+  font-size: 14px;
   .tab-item {
     flex: 1;
     text-align: center;
