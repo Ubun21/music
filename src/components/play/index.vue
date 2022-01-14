@@ -31,6 +31,7 @@
               <ul v-if="playingLyric !== null">
                 <li v-for="(text, index) in playingLyric.body" :idx="index" :key="index">
                   <p ref="item" class="text" :class="{ active: Number(currentLine) === Number(index) }" v-if="text !== ''">
+                    {{text}}
                   </p>
                 </li>
               </ul>

@@ -1,8 +1,8 @@
 <template>
   <div class="recommend">
     <div class="carousel-wrapper">
-      <carousel :enableDot="true">
-        <carousel-item  v-for="(item, index) in sliders" :key="index">
+      <carousel :enableDot="true" :fclick="true">
+        <carousel-item v-for="(item, index) in sliders" :key="index">
           <a :href="item.link">
             <img :src="item.pic"  />
           </a>

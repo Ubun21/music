@@ -114,6 +114,12 @@ export default defineComponent({
     }
     data.timeLine = new TimeLine()
     const nextPic = () => {
+      // console.info('nextPic begin play')
+      // console.info('animation length come from carousel-main', data.timeLine.animations.length)
+      // console.info('carousel-main', data.timeLine.state)
+      if (data.timeLine.animations.length !== 0) {
+        return
+      }
       if (!data.childReady || data.childLength === 0) {
         return
       }
@@ -125,13 +131,13 @@ export default defineComponent({
         -width * data.activeIndex,
         -width * data.activeIndex - width,
         0,
-        1
+        2
       )
       const nextAnimation = new Animation(nextItem, 'setTranslate', (v) => v,
         -width * nextPos + width,
         -width * nextPos,
         0,
-        1
+        2
       )
       data.timeLine.reset()
       data.timeLine.add(curAnimation)
