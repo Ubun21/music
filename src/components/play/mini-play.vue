@@ -84,8 +84,22 @@ export default defineComponent({
   }
   .center {
     flex: 1;
-    background: yellow;
     overflow: hidden;
+    .song-name {
+      margin-bottom: 4px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 14px;
+      color: #fff;
+    }
+    .singer-name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.3);
+    }
   }
   .right {
     flex-basis: 80px;
