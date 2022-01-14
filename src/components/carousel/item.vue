@@ -77,7 +77,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (scopeCarousel.addItem) {
+      if (scopeCarousel.addIteqm) {
         scopeCarousel.addItem({
           id: instance.uid,
           instance: instance,
