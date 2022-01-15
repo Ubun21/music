@@ -54,8 +54,8 @@ export default defineComponent({
     const isFullScreen = computed(() => store.state.fullScreen)
     const selectionAlbum = (ablum) => {
       router.push({
-        path: '/album/',
-        query: {
+        name: 'album',
+        params: {
           ...ablum
         }
       })

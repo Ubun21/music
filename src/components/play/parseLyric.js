@@ -54,9 +54,6 @@ export default function parserLyric (str) {
       const preKey = keys[i]
       const nextKey = keys[i + 1]
       const value = obj[preKey]
-      // if (preKey === '98' || preKey === '99') {
-      //   debugger
-      // }
       const rangIndexArr = makeRange(Number(preKey), Number(nextKey))
       rangIndexArr.forEach((idx) => {
         arr[idx] = {
@@ -72,7 +69,6 @@ export default function parserLyric (str) {
     return arr
   }
   timeMapElementIdx = makeSparseToDense(lyric.body)
-  console.info(timeMapElementIdx)
   return {
     parsetedLyric: lyric,
     timeMapElementIdx

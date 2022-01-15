@@ -42,8 +42,8 @@ export default defineComponent({
     })
     const selectTop = (top) => {
       router.push({
-        path: '/top/',
-        query: {
+        name: 'top',
+        params: {
           ...top
         }
       })

@@ -26,7 +26,7 @@ export default defineComponent({
   },
   setup (props) {
     const route = useRoute()
-    const song = { ...route.query }
+    const song = { ...route.params }
     const { excute, data, loading, error } = useAsync(props.getDataFn)
     excute(song).then((res) => {
       const result = processSongs(res.songs)

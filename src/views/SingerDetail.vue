@@ -31,11 +31,11 @@ export default defineComponent({
     const classes = ref([])
     const router = useRoute()
     onBeforeMount(async () => {
-      const songs = await getSingerDetail({ mid: router.query.id })
+      const songs = await getSingerDetail({ mid: router.params.id })
       const result = await processSongs(songs.songs)
       data.songs = result
-      data.title = router.query.name
-      data.pic = router.query.pic
+      data.title = router.params.name
+      data.pic = router.params.pic
     })
     return {
       data,

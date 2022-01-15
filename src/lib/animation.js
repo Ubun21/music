@@ -9,7 +9,7 @@ export class Animation {
     this.template = template
     this.start = start
     this.end = end
-    this.delay = delay ?? 0 
+    this.delay = delay ?? 0
     this.duration = duration
     this.timeFunction = timeFunction || liner
   }
@@ -26,7 +26,7 @@ export class ColorAnimation {
     this.template = template
     this.start = start
     this.end = end
-    this.delay = delay ?? 0 
+    this.delay = delay ?? 0
     this.duration = duration
     this.timeFunction = timeFunction || liner
   }

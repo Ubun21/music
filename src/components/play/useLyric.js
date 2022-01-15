@@ -1,6 +1,6 @@
 import { computed, watch, ref } from 'vue'
 import { useStore } from 'vuex'
-import { getLyric } from '../../service/song'
+import { getLyric } from '@/service/song'
 import parserLyric from './parseLyric'
 
 export default function useLyric (state) {
@@ -16,7 +16,7 @@ export default function useLyric (state) {
   const findLyricIndexByTime = (time) => {
     time = Math.floor(time)
     const lyric = timeMapElementArray.value[time]
-    const keys = Object.keys(playingLyric.value && playingLyric.value.body)
+    const keys = Object.keys(playingLyric.value.body)
     if (!lyric || !lyric.head) {
       return
     }

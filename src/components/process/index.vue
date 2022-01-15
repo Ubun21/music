@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, onUnmounted, onMounted } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import Slider from '../slider/index.vue'
 
 export default defineComponent({
@@ -39,7 +39,6 @@ export default defineComponent({
 
     const tick = () => {
       const t = Date.now() - startTime.value
-      console.info('t', t)
       let process = t / props.duration
       if (process > 1) {
         process = 100
@@ -65,14 +64,6 @@ export default defineComponent({
       startTime.value = Date.now() - props.duration * (process / 100)
       emit('movechange', process)
     }
-    onUnmounted(() => {
-      console.info('process ready unmount')
-      // clearTimeout(timeId.value)
-    })
-    onMounted(() => {
-      console.info('timeId', timeId.value)
-      console.info('state', state.value)
-    })
     // 观察用户的输入的playmode, playmode: 'play'|'pause'|'resume'
     watch(
       () => props.playmode,
@@ -104,16 +95,8 @@ export default defineComponent({
           percentage.value = 0
           state.value = 'playing'
           startTime.value = Date.now()
-          console.info('process restart')
-          console.info('timeId', timeId.value)
           tick()
         }
-      }
-    )
-    watch(
-      () => props.time,
-      () => {
-        // console.info(time)
       }
     )
     watch(state, (newState) => {

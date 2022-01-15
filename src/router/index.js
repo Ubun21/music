@@ -13,15 +13,18 @@ const routes = [
   },
   {
     path: '/singer/',
+    name: 'singer',
     component: SingerDetail,
     meta: { transition: 'slider' }
   },
   {
     path: '/top/',
+    name: 'top',
     component: TopDetail
   },
   {
     path: '/album/',
+    name: 'album',
     component: RecomDetail
   }
 ]
