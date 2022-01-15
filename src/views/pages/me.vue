@@ -1,5 +1,9 @@
 <template>
-  <div class="me">
+  <div class="me"
+       @touchstart="touchStart"
+       @touchmove="touchMove"
+       @touchend="touchEnd"
+       ref="me">
     <div class="search-input">
       <search-input v-model="query"></search-input>
     </div>
@@ -61,6 +65,7 @@ import Confirm from '../../components/confirm/index'
 import { getHotKeys, search } from '../../service/search'
 import { debounce } from 'lodash'
 import SearchInput from '../../components/input/index'
+import { usePreventDefault } from '@/hooks/usePreventDefalut'
 export default defineComponent({
   name: 'me',
   components: {
@@ -75,6 +80,8 @@ export default defineComponent({
     const searchRes = ref([])
     const searchHis = ref([])
     const page = ref(0)
+    const me = ref(null)
+    const { touchStart, touchMove, touchEnd } = usePreventDefault(me)
     const selectSong = (song) => {
       const history = searchHis.value
       const exits = history.some((item) => item.id === song.id)
@@ -134,6 +141,10 @@ export default defineComponent({
       }, 600)
     )
     return {
+      me,
+      touchStart,
+      touchMove,
+      touchEnd,
       query,
       hotKeys,
       searchRes,

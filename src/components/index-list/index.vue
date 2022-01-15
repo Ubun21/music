@@ -1,5 +1,9 @@
 <template>
-  <div class="index-wrapper" ref="container">
+  <div class="index-wrapper"
+       @touchstart="touchStart"
+       @touchmove="touchMove"
+       @touchend="touchEnd"
+       ref="container">
     <ul ref="indexList">
       <li class="index-list" :ground-name="item.title"
         v-for="(item, index) in data.singers" :key="index"
@@ -38,6 +42,7 @@
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import useFixed from './useFixed'
 import useShortcut from './useShortcut'
+import { usePreventDefault } from '@/hooks/usePreventDefalut'
 export default defineComponent({
   name: 'IndexList',
   props: ['data', 'activeIndex'],
@@ -52,10 +57,11 @@ export default defineComponent({
       heights: null,
       indexs: null
     })
+    const { touchStart, touchMove, touchEnd } = usePreventDefault(container)
     onMounted(() => {
       if (indexList.value) {
         const { heights, indexs } = useFixed(indexList)
-        useShortcut(container, state)
+        useShortcut(container, state, activeIdx)
         state.heights = heights
         state.indexs = indexs
       }
@@ -90,6 +96,9 @@ export default defineComponent({
     }
     return {
       container,
+      touchStart,
+      touchMove,
+      touchEnd,
       indexList,
       titles,
       state,

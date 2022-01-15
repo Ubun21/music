@@ -1,4 +1,4 @@
-export default function useShortcut (container, state) {
+export default function useShortcut (container, state, activeIdx) {
   const root = container.value
   const items = document.querySelectorAll('.index-wrapper .list-title')
   const options = {
@@ -8,11 +8,11 @@ export default function useShortcut (container, state) {
   }
   const callback = (entries, observer) => {
     const { boundingClientRect, target } = entries[0]
-    // console.info(entries)
+    console.info(entries)
     if (boundingClientRect.y < 50) {
-      // console.info(target)
+      console.info(target)
       const index = state.indexs.indexOf(target.getAttribute('ground-name'))
-      state.activeIdx = index
+      activeIdx.value = index
     }
   }
   const observer = new IntersectionObserver(callback, options)

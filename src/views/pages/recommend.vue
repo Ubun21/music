@@ -11,7 +11,11 @@
     </div>
     <div class="list-wrapper">
       <h1 class="list-title">热门推荐</h1>
-      <ul class="list-content">
+      <ul class="list-content"
+          @touchstart="touchStart"
+          @touchmove="touchMove"
+          @touchend="touchEnd"
+          ref="listContent">
         <li class="list-content-item" v-for="item in albums" :key="item" @click="selectionAlbum(item)">
           <div class="icon">
             <img :src="item.pic">
@@ -34,6 +38,7 @@ import CarouselItem from '../../components/carousel/item.vue'
 import { getRecommend } from '../../service/recomment'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { usePreventDefault } from '@/hooks/usePreventDefalut'
 export default defineComponent({
   name: 'recommend',
   components: {
@@ -43,6 +48,7 @@ export default defineComponent({
   async setup () {
     const sliders = ref([])
     const albums = ref([])
+    const listContent = ref(null)
     const router = useRouter()
     const store = useStore()
     const isFullScreen = computed(() => store.state.fullScreen)
@@ -54,7 +60,7 @@ export default defineComponent({
         }
       })
     }
-
+    const { touchStart, touchMove, touchEnd } = usePreventDefault(listContent)
     const result = await getRecommend()
     sliders.value = result.sliders
     albums.value = result.albums
@@ -62,7 +68,11 @@ export default defineComponent({
       sliders,
       albums,
       isFullScreen,
-      selectionAlbum
+      listContent,
+      selectionAlbum,
+      touchStart,
+      touchMove,
+      touchEnd
     }
   }
 })

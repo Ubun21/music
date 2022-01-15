@@ -104,6 +104,10 @@ export default defineComponent({
       startY = e.changedTouches[0].clientY
     }
     const move = (e) => {
+      // 在list-wrapper无法滚动的时候，阻止浏览器的默认事件
+      if (!isActive.value) {
+        e.preventDefault()
+      }
       if (!maxTranslateX) {
         return
       }
@@ -136,7 +140,6 @@ export default defineComponent({
       }
       blur.value = blueValue
       translateY.value = move
-      console.info('move', move)
     }
     const end = (e) => {
       const dx = e.changedTouches[0].clientY - startY

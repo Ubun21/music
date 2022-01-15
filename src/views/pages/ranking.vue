@@ -1,5 +1,9 @@
 <template>
-  <div class="ranking">
+  <div class="ranking"
+       @touchstart="touchStart"
+       @touchmove="touchMove"
+       @touchend="touchEnd"
+       ref="ranking">
     <ul class="top-list">
       <li class="item" v-for="(item, index) in data" @click="selectTop(item)" :key="index">
         <div class="left">
@@ -22,11 +26,14 @@
 import { defineComponent, onBeforeMount, ref } from 'vue'
 import { getTopList } from '../../service/top'
 import { useRouter } from 'vue-router'
+import { usePreventDefault } from '@/hooks/usePreventDefalut'
 export default defineComponent({
   name: 'ranking',
   setup () {
     const data = ref(null)
+    const ranking = ref(null)
     const router = useRouter()
+    const { touchStart, touchMove, touchEnd } = usePreventDefault(ranking)
     onBeforeMount(async () => {
       const res = await getTopList()
       data.value = res.topList
@@ -43,6 +50,10 @@ export default defineComponent({
     }
     return {
       data,
+      ranking,
+      touchStart,
+      touchMove,
+      touchEnd,
       selectTop
     }
   }
