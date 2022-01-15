@@ -458,8 +458,8 @@ export default defineComponent({
         .time {
           display: inline-block;
           width: 40px;
-          font-size: 6px;
           color: yellow;
+          font-size: 10px;
         }
         .time-left {
           text-align: left;

@@ -9,4 +9,10 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+  padding: 40px;
+  font-size: 18px;
+  color: red;
+  text-align: center;
+}
 </style>

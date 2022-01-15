@@ -27,16 +27,17 @@ export default function useLyric (state) {
     if (index === 'undefined' || !playingLyric.value) {
       return
     }
-    const keys = Object.keys(playingLyric.value.body)
+    const keys = Object.keys((playingLyric.value && playingLyric.value.body) || {})
     return keys[index]
   }
   let lastIndex = -1
+  // 歌曲播放时，进度发生变化时，歌曲列表滚动对应的歌词
   watch(
     currentTime,
     (newTime) => {
       const index = findLyricIndexByTime(newTime)
       const lyricWrapperEl = lyricWrapper.value
-      const itemHeight = item.value.clientHeight
+      const itemHeight = item.value && item.value.clientHeight
       currentLine.value = findLyricHeadByIndex(index)
       if (lastIndex === index) {
         return
@@ -51,6 +52,7 @@ export default function useLyric (state) {
       lastIndex = index
     }
   )
+  // 切换歌曲时，同时切换歌词
   watch(
     currentSong,
     async (newSong) => {

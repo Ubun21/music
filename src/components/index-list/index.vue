@@ -1,39 +1,42 @@
 <template>
-  <div class="index-wrapper"
-       @touchstart="touchStart"
-       @touchmove="touchMove"
-       @touchend="touchEnd"
-       ref="container">
-    <ul ref="indexList">
-      <li class="index-list" :ground-name="item.title"
-        v-for="(item, index) in data.singers" :key="index"
-      >
-        <div class="list-title" :ground-name="item.title" ref="titles">{{item.title}}</div>
-        <ul>
-          <li class="list-item" v-for="(child, index) in item.list" :key="index"
-            @click="onClick(child)"
-          >
-            <div class="avator">
-              <img :src="child.pic" />
-            </div>
-            <div class="name">
-              {{child.name}}
-            </div>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <div class="shortcut" v-show="activeIndex === 1">
-      <ul>
-        <li class="item" :ground-name="item.title" v-for="(item, index) in data.singers" :key="index"
-          :class="{ active: index === activeIdx}"
-          @touchstart.passive="onStart"
-          @touchmove.passive="onMove"
-          @touchend.passive="onEnd"
+  <div class="indicator" ref="indicator">
+    <span class="activeTitle">{{ activeTitle }}</span>
+    <div class="index-wrapper"
+         @touchstart="touchStart"
+         @touchmove="touchMove"
+         @touchend="touchEnd"
+         ref="container">
+      <ul ref="indexList">
+        <li class="index-list" :ground-name="item.title"
+            v-for="(item, index) in data.singers" :key="index"
         >
-          {{item.title}}
+          <div class="list-title" :ground-name="item.title" ref="titles">{{item.title}}</div>
+          <ul>
+            <li class="list-item" v-for="(child, index) in item.list" :key="index"
+                @click="onClick(child)"
+            >
+              <div class="avator">
+                <img :src="child.pic" />
+              </div>
+              <div class="name">
+                {{child.name}}
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
+      <div class="shortcut" v-show="activeIndex === 1">
+        <ul>
+          <li class="item" :ground-name="item.title" v-for="(item, index) in data.singers" :key="index"
+              :class="{ active: index === activeIdx}"
+              @touchstart.passive="onStart"
+              @touchmove.passive="onMove"
+              @touchend.passive="onEnd"
+          >
+            {{item.title}}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -50,8 +53,10 @@ export default defineComponent({
   setup (props, { emit }) {
     const container = ref(null)
     const indexList = ref(null)
+    const indicator = ref(null)
     const titles = ref(null)
     const activeIdx = ref(0)
+    const activeTitle = ref('热')
     const state = reactive({
       active: false,
       heights: null,
@@ -61,7 +66,7 @@ export default defineComponent({
     onMounted(() => {
       if (indexList.value) {
         const { heights, indexs } = useFixed(indexList)
-        useShortcut(container, state, activeIdx)
+        useShortcut(indicator, state, activeIdx, activeTitle)
         state.heights = heights
         state.indexs = indexs
       }
@@ -71,6 +76,7 @@ export default defineComponent({
     const onStart = (e) => {
       startY = e.changedTouches[0].clientY
       const groundName = e.target.getAttribute('ground-name')
+      activeTitle.value = groundName
       pos = state.indexs.indexOf(groundName)
       const scrollTop = state.heights.get(groundName)
       activeIdx.value = pos
@@ -96,6 +102,8 @@ export default defineComponent({
     }
     return {
       container,
+      indicator,
+      activeTitle,
       touchStart,
       touchMove,
       touchEnd,
@@ -112,18 +120,32 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.indicator {
+  position: fixed;
+  height: 27px;
+  width: 100%;
+  .activeTitle {
+    position: absolute;
+    height: 27px;
+    line-height: 27px;
+    left: 0px;
+    right: 0px;
+    padding-left: 10px;
+    z-index: 1000;
+    color: rgba(255, 255, 255, 0.5);
+    background: #333;
+  }
+}
 .index-wrapper {
   position: relative;
-  height: 100%;
+  height: calc(100vh - 44px);
   overflow: scroll;
   .index-list {
     .list-title {
       height: 27px;
       font-size: 16px;
-      position: sticky;
       line-height: 27px;
-      top: 0px;
       padding-left: 10px;
       color: rgba(255, 255, 255, 0.5);
       background: #333;
