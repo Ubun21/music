@@ -1,5 +1,8 @@
 <template>
-    <div class="home-wrapper">
+    <div class="home-wrapper"
+         @touchstart="touchStart"
+         @touchmove="touchMove"
+         @touchend="touchEnd">
       <tab @active="hanldChange" :index="data.index"></tab>
       <carousel :index="data.index" :fclick="true" :loop="false" @active="active">
         <carousel-item>
@@ -50,6 +53,27 @@ export default defineComponent({
     const hanldChange = (e) => {
       data.index = e
     }
+    let startX = 0
+    let startY = 0
+    const touchStart = (e) => {
+      startX = e.changedTouches[0].clientX
+      startY = e.changedTouches[0].clientY
+    }
+    const touchMove = (e) => {
+      const moveX = e.changedTouches[0].clientX
+      const moveY = e.changedTouches[0].clientY
+      const dx = startX - moveX
+      const dy = startY - moveY
+      const isYMoved = Math.abs(dy) > 15
+      const isXMoved = Math.abs(dx) > 15
+      if (isXMoved && !isYMoved) {
+        e.preventDefault()
+      }
+    }
+    const touchEnd = (e) => {
+      startX = 0
+      startY = 0
+    }
     const active = (e) => {
       data.index = e
     }
@@ -66,6 +90,9 @@ export default defineComponent({
     return {
       data,
       hanldChange,
+      touchStart,
+      touchMove,
+      touchEnd,
       active,
       onSelect
     }

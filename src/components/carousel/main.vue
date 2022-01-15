@@ -180,6 +180,7 @@ export default defineComponent({
       items,
       nextPic: nextPic,
       loop: props.loop,
+      nest: props.nest,
       isFclick
     })
     watch(

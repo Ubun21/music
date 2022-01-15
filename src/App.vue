@@ -32,6 +32,8 @@ export default defineComponent({
       }
       mobile.value = isMobile()
     })
+    document.addEventListener('contextmenu', (e) => e.preventDefault())
+    document.addEventListener('selectstart', e => e.preventDefault())
     return {
       mobile
     }

@@ -1,8 +1,8 @@
 <template>
   <div class="carousel-item"
-    @touchstart.passive="start"
-    @touchmove.passive="move"
-    @touchend.passive="end"
+    @touchstart="start"
+    @touchmove="move"
+    @touchend="end"
     :style="itemStyle"
   >
     <slot></slot>
@@ -59,7 +59,6 @@ export default defineComponent({
         return false
       }
       const result = scopeCarousel.isFclick.value
-      console.info('fclick result', result)
       return result
     })
     const setTranslate = computed({
@@ -95,7 +94,10 @@ export default defineComponent({
     let startY = 0
     let offset = 0
     const start = (e) => {
-      e.stopPropagation()
+      if (scopeCarousel.nest) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
       startX = getClientX(e)
       startY = getClientY(e)
       scopeCarousel.data.pauser()
@@ -132,7 +134,10 @@ export default defineComponent({
       if (!scopeCarousel.data.childReady) {
         return
       }
-      e.stopPropagation()
+      if (scopeCarousel.nest) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
       const moveX = getClientX(e)
       const moveY = getClientY(e)
       const ang = angle360(startX, startY, moveX, moveY)
