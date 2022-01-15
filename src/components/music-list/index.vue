@@ -27,11 +27,12 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, computed, getCurrentInstance } from 'vue'
+import { computed, defineComponent, getCurrentInstance, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { TimeLine, Animation } from '../../lib/animation'
+import { Animation, TimeLine } from '@/lib/animation'
 import SongList from '../song-list/index'
+
 export default defineComponent({
   name: 'Music-List',
   components: {
@@ -51,9 +52,9 @@ export default defineComponent({
     const titleRef = ref(null)
     const listWrapperRef = ref(null)
     const translateY = ref(0)
-    const scale = ref(1)
-    const blur = ref(0)
-    const isActive = ref(false)
+    const scale = ref(1) // 控制头部内容缩放大小
+    const blur = ref(0) // 控制头部内容模糊大小
+    const isActive = ref(false) // 控制list-wrapper是否可以滑动
     let maxTranslateX = 0
     let startY = 0
     let lastBlur = 0
@@ -72,18 +73,16 @@ export default defineComponent({
       }
     })
     const bgImageStyle = computed(() => {
-      const style = {
+      return {
         backgroundImage: `url(${props.pic})`,
         filter: `blur(${blur.value}px)`
       }
-      return style
     })
     const HeadWrapperStyle = computed({
       get () {
-        const style = {
+        return {
           transform: `scale(${scale.value})`
         }
-        return style
       },
       set (val) {
         if (!val) return
@@ -110,9 +109,9 @@ export default defineComponent({
       }
       const moveY = e.changedTouches[0].clientY
       const dx = moveY - startY
-      const percetage = dx / maxTranslateX
-      const move = maxTranslateX * percetage + lastTranslateY
-      const blueValue = lastBlur - 10 * percetage
+      const percentage = dx / maxTranslateX
+      const move = maxTranslateX * percentage + lastTranslateY
+      const blueValue = lastBlur - 10 * percentage
       if (dx < 0 && Math.abs(move) >= maxTranslateX) {
         isActive.value = true
         return
@@ -124,18 +123,20 @@ export default defineComponent({
         isActive.value = false
       }
       if (dx > 0 && move > 0) {
-        // 选择一个比maxTranslate小的多的底数,从而使得scle比translateY快避免出现空隙
+        // 选择一个比maxTranslate小的多的底数,从而使得scale比translateY快避免出现空隙
         const baseNumber = 100
-        const percetage = move / baseNumber
-        scale.value = 1 + (1 * percetage)
-        translateY.value = move
+        const percentage = move / baseNumber
         blur.value = 0
         lastBlur = 0
+        if (Number(move) < 60) { // 限制下拉的最长距离
+          scale.value = 1 + percentage
+          translateY.value = move
+        }
         return
       }
       blur.value = blueValue
       translateY.value = move
-      console.info('translateY', translateY.value)
+      console.info('move', move)
     }
     const end = (e) => {
       const dx = e.changedTouches[0].clientY - startY
@@ -207,6 +208,7 @@ export default defineComponent({
     width: 80%;
     text-align: center;
     line-height: 40px;
+    height: 40px;
     font-size: 18px;
     color: #fff;
   }
