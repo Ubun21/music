@@ -68,6 +68,8 @@ import SearchInput from '../../components/input/index'
 import { usePreventDefault } from '@/hooks/usePreventDefalut'
 import { useStore } from 'vuex'
 import { processSongs } from '@/service/song'
+import { useStorage } from '@/hooks/useStorage'
+
 export default defineComponent({
   name: 'me',
   components: {
@@ -80,20 +82,29 @@ export default defineComponent({
     const hotKeys = ref(null)
     const confirmRef = ref(null)
     const searchRes = ref([])
-    const searchHis = ref([])
+    const searchHis = useStorage('searchHis', [])
     const page = ref(0)
     const me = ref(null)
     const store = useStore()
     const { touchStart, touchMove, touchEnd } = usePreventDefault(me)
     const selectSong = async (song) => {
+      debugger
       const history = searchHis.value
-      const exits = history.some((item) => item.id === song.id)
-      if (exits) {
-        return
-      }
+      let idx = -1
+      const exits = history.some((item, index) => {
+        idx = index
+        return item.id === song.id
+      })
       searchHis.value.push(song)
       const rawSearchHis = toRaw(searchHis.value)
       const playLists = await processSongs(rawSearchHis) // 通过processSongs拿到完整url
+      if (exits) {
+        store.dispatch(
+          'selectPlay',
+          { list: playLists, index: idx }
+        )
+        return
+      }
       store.dispatch(
         'selectPlay',
         { list: playLists, index: playLists.length - 1 }
