@@ -59,13 +59,15 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, onBeforeMount } from 'vue'
+import { defineComponent, ref, watch, onBeforeMount, toRaw } from 'vue'
 import Scroll from '../../components/scroll/index'
 import Confirm from '../../components/confirm/index'
 import { getHotKeys, search } from '../../service/search'
 import { debounce } from 'lodash'
 import SearchInput from '../../components/input/index'
 import { usePreventDefault } from '@/hooks/usePreventDefalut'
+import { useStore } from 'vuex'
+import { processSongs } from '@/service/song'
 export default defineComponent({
   name: 'me',
   components: {
@@ -81,14 +83,21 @@ export default defineComponent({
     const searchHis = ref([])
     const page = ref(0)
     const me = ref(null)
+    const store = useStore()
     const { touchStart, touchMove, touchEnd } = usePreventDefault(me)
-    const selectSong = (song) => {
+    const selectSong = async (song) => {
       const history = searchHis.value
       const exits = history.some((item) => item.id === song.id)
       if (exits) {
         return
       }
       searchHis.value.push(song)
+      const rawSearchHis = toRaw(searchHis.value)
+      const playLists = await processSongs(rawSearchHis) // 通过processSongs拿到完整url
+      store.dispatch(
+        'selectPlay',
+        { list: playLists, index: playLists.length - 1 }
+      )
     }
     onBeforeMount(async () => {
       const res = await getHotKeys()
@@ -166,7 +175,6 @@ export default defineComponent({
 .me {
   width: 100vw;
   height: calc(100vh - 44px);
-  background: #333;
   display: flex;
   flex-direction: column;
   .search-input {

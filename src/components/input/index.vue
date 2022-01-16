@@ -44,6 +44,7 @@ export default defineComponent({
   position: relative;
   display: flex;
   align-items: center;
+  color: #333333;
   .icon-search {
     font-size: 24px;
     position: absolute;

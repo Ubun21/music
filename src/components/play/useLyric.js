@@ -16,7 +16,7 @@ export default function useLyric (state) {
   const findLyricIndexByTime = (time) => {
     time = Math.floor(time)
     const lyric = timeMapElementArray.value[time]
-    const keys = Object.keys(playingLyric.value.body)
+    const keys = Object.keys((playingLyric.value && playingLyric.value.body) || {})
     if (!lyric || !lyric.head) {
       return
     }

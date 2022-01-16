@@ -9,8 +9,6 @@ export default function useShortcut (container, state, activeIdx, activeTitle) {
     if (!isIntersec) {
       isIntersec = true
       const { target } = entries[0]
-      console.info(entries)
-      console.info(target)
       const title = target.getAttribute('ground-name')
       activeTitle.value = title
       const index = state.indexs.indexOf(title)
