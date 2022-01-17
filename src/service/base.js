@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const ERR_OK = 0
-axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'http://47.241.56.206:9000/music' : '/'
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'http://47.241.56.206:9000/music-next' : '/'
 
 export function get (url, params) {
   return axios.get(url, {
