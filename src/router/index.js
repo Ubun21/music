@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/home.vue'
-import SingerDetail from '@/views/SingerDetail'
-import TopDetail from '@/views/topDetail'
-import RecomDetail from '@/views/recomDetail'
+const Home = () => import('@/views/home.vue'/* webpackChunkName: "user-center" */)
+const SingerDetail = () => import('@/views/SingerDetail'/* webpackChunkName: "user-center" */)
+const TopDetail = () => import('@/views/topDetail'/* webpackChunkName: "user-center" */)
+const RecomDetail = () => import('@/views/recomDetail'/* webpackChunkName: "user-center" */)
 
 const routes = [
   {
