@@ -88,7 +88,6 @@ export default defineComponent({
     const store = useStore()
     const { touchStart, touchMove, touchEnd } = usePreventDefault(me)
     const selectSong = async (song) => {
-      debugger
       const history = searchHis.value
       let idx = -1
       const exits = history.some((item, index) => {
