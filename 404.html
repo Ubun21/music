@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<head>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+  <style>
+    body {
+      padding-top: 300px;
+      background-color: #333333;
+      color: #d93f30;
+    }
+
+  </style>
+</head>
+<body>
+  <p>访问的页面不存在，2秒后从定向到首页</p>
+  <a id="link" href="http://120.48.6.19:9000/">Website</a>
+  <script>
+    window.onload = () => {
+      const link = document.getElementById('link')
+      setTimeout(() => {
+        link.click()
+      }, 2000)
+    }
+  </script>
+</body>

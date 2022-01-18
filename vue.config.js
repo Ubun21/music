@@ -12,6 +12,5 @@ module.exports = {
       config.plugins.push(new BundleAnalyzerPlugin())
     }
   },
-  productionSourceMap: false,
-  publicPath: process.env.NODE_ENV === 'production' ? '/music-next/' : '/'
+  productionSourceMap: false
 }

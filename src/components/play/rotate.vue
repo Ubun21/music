@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { defineComponent, watch, ref, computed } from 'vue'
+import { defineComponent, ref, computed, watchEffect } from 'vue'
 import { useStore } from 'vuex'
 export default defineComponent({
   name: 'Rotate',
@@ -31,16 +31,13 @@ export default defineComponent({
       }
       return { border: borderStri }
     })
-    watch(
-      playing,
-      (playing) => {
-        if (playing) {
-          cls.value = 'running'
-        } else {
-          cls.value = 'pause'
-        }
+    watchEffect(() => {
+      if (playing.value) {
+        cls.value = 'running'
+      } else {
+        cls.value = 'pause'
       }
-    )
+    })
     return {
       cls,
       borderStyle
