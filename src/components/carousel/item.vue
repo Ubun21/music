@@ -93,6 +93,7 @@ export default defineComponent({
     // 当发生y上的移动时
     let startY = 0
     let offset = 0
+    let startTime = 0
     const start = (e) => {
       if (scopeCarousel.nest) {
         e.stopPropagation()
@@ -100,6 +101,7 @@ export default defineComponent({
       }
       startX = getClientX(e)
       startY = getClientY(e)
+      startTime = Date.now()
       scopeCarousel.data.pauser()
       // 计算动画产生的偏移
       const width = scopeCarousel.offsetWidth.value
@@ -172,11 +174,13 @@ export default defineComponent({
       const dx = getClientX(e) - startX
       const width = scopeCarousel.offsetWidth.value
       const fclick = scopeCarousel.isFclick.value
-      const speed = fclick ? 0.3 : 1
+      const speed = fclick ? 0.3 : 0.3
       let direction = 0
-      if ((dx < -width / 2) || (fclick && dx < -minDinstance)) {
+      const endTime = Date.now()
+      const duration = endTime - startTime // 用来判断快速滑动
+      if ((dx < -width / 2) || (duration < 700) || (fclick && dx < -minDinstance)) {
         direction = -1
-      } else if ((dx > width / 2) || ((fclick && dx > minDinstance))) {
+      } else if ((dx > width / 2) || (duration < 700) || ((fclick && dx > minDinstance))) {
         direction = 1
       }
       const timeLine = new TimeLine()

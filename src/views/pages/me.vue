@@ -1,8 +1,5 @@
 <template>
   <div class="me"
-       @touchstart="touchStart"
-       @touchmove="touchMove"
-       @touchend="touchEnd"
        ref="me">
     <div class="search-input">
       <search-input v-model="query"></search-input>
@@ -33,11 +30,11 @@
         </div>
       </div>
     </div>
-    <div class="search-result" @touchstart.stop v-if="query">
-      <scroll @intersection="loadMore">
+    <div class="search-result" v-if="query">
+      <scroll class="scroll" @intersection="loadMore">
         <ul v-if="searchRes" class="search-result-list">
           <li v-for="(item, index) in searchRes" :key="index">
-            <div class="song" @touchstart.stop="selectSong(item)">
+            <div class="song" ref="songItem" @click="selectSong(item)">
               <span class="song-icon">
                 <i class="icon-music"></i>
               </span>
@@ -60,11 +57,11 @@
 
 <script>
 import { defineComponent, ref, watch, onBeforeMount, toRaw } from 'vue'
-import Scroll from '../../components/scroll/index'
-import Confirm from '../../components/confirm/index'
-import { getHotKeys, search } from '../../service/search'
+import Scroll from '@/components/scroll/index'
+import Confirm from '@/components/confirm/index'
+import { getHotKeys, search } from '@/service/search'
 import { debounce } from 'lodash'
-import SearchInput from '../../components/input/index'
+import SearchInput from '@/components/input/index'
 import { usePreventDefault } from '@/hooks/usePreventDefalut'
 import { useStore } from 'vuex'
 import { processSongs } from '@/service/song'
@@ -82,6 +79,7 @@ export default defineComponent({
     const hotKeys = ref(null)
     const confirmRef = ref(null)
     const searchRes = ref([])
+    const songItem = ref(null)
     const searchHis = useStorage('searchHis', [])
     const page = ref(0)
     const me = ref(null)
@@ -168,6 +166,7 @@ export default defineComponent({
       hotKeys,
       searchRes,
       confirmRef,
+      songItem,
       openConfirm,
       hotKeyClicked,
       searchHis,
@@ -244,14 +243,18 @@ export default defineComponent({
     position: relative;
     overflow: auto;
     color: rgba(255, 255, 255, 0.3);
-    .search-result-list {
-      padding: 0 20px;
-      .song {
-        padding-bottom: 20px;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        .song-icon {
-          padding-right: 10px;
+    .scroll {
+      height: 482px;
+      overflow: auto;
+      .search-result-list {
+        padding: 0 20px;
+        .song {
+          padding-bottom: 20px;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+          .song-icon {
+            padding-right: 10px;
+          }
         }
       }
     }

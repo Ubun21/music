@@ -1,7 +1,7 @@
 <template>
   <div class="recommend">
     <div class="carousel-wrapper">
-      <carousel :enableDot="true" :nest="true" :fclick="true">
+      <carousel :enableDot="true" :nest="true">
         <carousel-item  v-for="(item, index) in sliders" :key="index">
           <a :href="item.link">
             <img :src="item.pic"  />
