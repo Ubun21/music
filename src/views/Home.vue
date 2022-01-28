@@ -24,7 +24,7 @@
       </carousel>
     </div>
     <router-view v-slot="{ Component }">
-      <transition name="swiper">
+      <transition name="swiper-out">
         <component :is="Component" />
       </transition>
     </router-view>

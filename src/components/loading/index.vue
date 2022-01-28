@@ -14,9 +14,6 @@ export default {
 
 <style lang="scss">
 .loading {
-  position: absolute;
-  left: calc(50% - 16px);
-  top: calc(50% - 16px);
   .content {
     img {
       height: 2em;

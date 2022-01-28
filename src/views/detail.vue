@@ -1,11 +1,14 @@
 <template>
-  <transition name="swiper">
+  <transition name="swiper-in">
     <div v-if="data">
       <music-list
         :songs="data.songs"
         :title="song.name"
         :pic="song.pic"
       ></music-list>
+    </div>
+    <div class="loading-wrapper" v-else>
+      <loading></loading>
     </div>
   </transition>
 </template>
@@ -16,6 +19,7 @@ import { useRoute } from 'vue-router'
 import { processSongs } from '../service/song'
 import MusicList from '../components/music-list/index'
 import useAsync from '../hooks/useAsync'
+import Loading from '../components/loading/index'
 export default defineComponent({
   name: 'detail',
   props: {
@@ -24,7 +28,8 @@ export default defineComponent({
     }
   },
   components: {
-    MusicList
+    MusicList,
+    Loading
   },
   setup (props) {
     const route = useRoute()
@@ -45,3 +50,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.loading-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+</style>

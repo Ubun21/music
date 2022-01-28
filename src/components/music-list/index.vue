@@ -186,6 +186,7 @@ export default defineComponent({
 .music-list {
   height: 100vh;
   overflow: hidden;
+  width: 100vw;
   .head-wrapper {
     overflow: hidden;
     width: 100vw;
@@ -209,7 +210,7 @@ export default defineComponent({
     position: absolute;
     top: 0;
     left: 10%;
-    width: 80%;
+    right: 0px;
     text-align: center;
     line-height: 40px;
     height: 40px;

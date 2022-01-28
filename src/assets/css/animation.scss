@@ -24,13 +24,17 @@
     transform: scale(0);
 }
 
-.swiper-enter-active,
-.swiper-leave-active {
-  transition: transform 0.5s;
+.swiper-in-enter-active {
+  transition: transform 0.3s;
   transform: translateX(0%);
 }
-
-.swiper-enter-from,
-.swiper-leave-to {
+.swiper-in-enter-from {
+  transform: translateX(100%);
+}
+.swiper-out-leave-active {
+  transition: transform 0.3s;
+  transform: translateX(0%);
+}
+.swiper-out-leave-to {
   transform: translateX(100%);
 }
