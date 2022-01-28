@@ -23,7 +23,11 @@
         </carousel-item>
       </carousel>
     </div>
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <transition name="swiper">
+        <component :is="Component" />
+      </transition>
+    </router-view>
 </template>
 
 <script>

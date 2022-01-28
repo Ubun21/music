@@ -1,12 +1,14 @@
 <template>
-  <div class="music-wrapper" v-if="data.songs">
-    <music-list
-      :songs="data.songs"
-      :title="data.title"
-      :pic="data.pic"
-    >
-    </music-list>
-  </div>
+  <transition name="swiper">
+    <div class="music-wrapper" v-if="data.songs">
+      <music-list
+        :songs="data.songs"
+        :title="data.title"
+        :pic="data.pic"
+      >
+      </music-list>
+    </div>
+  </transition>
 </template>
 
 <script>

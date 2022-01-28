@@ -13,17 +13,20 @@ const routes = [
       {
         path: '/album/',
         name: 'album',
-        component: RecomDetail
+        component: RecomDetail,
+        meta: { transition: 'swiper' }
       },
       {
         path: '/singer/',
         name: 'singer',
-        component: SingerDetail
+        component: SingerDetail,
+        meta: { transition: 'swiper' }
       },
       {
         path: '/top/',
         name: 'top',
-        component: TopDetail
+        component: TopDetail,
+        meta: { transition: 'swiper' }
       }
     ]
   }
