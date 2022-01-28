@@ -1,14 +1,12 @@
 <template>
-  <transition name="switch">
-    <div v-if="data.songs">
-      <music-list
-        :songs="data.songs"
-        :title="data.title"
-        :pic="data.pic"
-      >
-      </music-list>
-    </div>
-  </transition>
+  <div class="music-wrapper" v-if="data.songs">
+    <music-list
+      :songs="data.songs"
+      :title="data.title"
+      :pic="data.pic"
+    >
+    </music-list>
+  </div>
 </template>
 
 <script>
@@ -46,26 +44,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@keyframes slidein {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0%);
-  }
-}
-@keyframes slideout {
-  from {
-    transform: translateX(0%);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
-.active {
-  animation: slidein .3s linear;
-}
-.leave {
-  animation: slideout .3s linear;
+.music-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 </style>

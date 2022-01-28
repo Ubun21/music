@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-const Home = () => import('@/views/home.vue'/* webpackChunkName: "user-center" */)
+const Home = () => import('@/views/home.vue'/* webpackChunkName: "home" */)
 const SingerDetail = () => import('@/views/SingerDetail'/* webpackChunkName: "user-center" */)
 const TopDetail = () => import('@/views/topDetail'/* webpackChunkName: "user-center" */)
 const RecomDetail = () => import('@/views/recomDetail'/* webpackChunkName: "user-center" */)
@@ -9,23 +9,23 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
-    meta: { transition: 'not' }
-  },
-  {
-    path: '/singer/',
-    name: 'singer',
-    component: SingerDetail,
-    meta: { transition: 'slider' }
-  },
-  {
-    path: '/top/',
-    name: 'top',
-    component: TopDetail
-  },
-  {
-    path: '/album/',
-    name: 'album',
-    component: RecomDetail
+    children: [
+      {
+        path: '/album/',
+        name: 'album',
+        component: RecomDetail
+      },
+      {
+        path: '/singer/',
+        name: 'singer',
+        component: SingerDetail
+      },
+      {
+        path: '/top/',
+        name: 'top',
+        component: TopDetail
+      }
+    ]
   }
 ]
 

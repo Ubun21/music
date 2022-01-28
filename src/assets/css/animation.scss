@@ -24,12 +24,13 @@
     transform: scale(0);
 }
 
-.switch-enter-active,
-.switch-leave-active {
-    transition: all .2s
-}
-
-.switch-enter-from,
-.switch-leave-to {
-    transform: translate3d(100%, 0, 0)
-}
+//.swiper-enter-active,
+//.swiper-leave-active {
+//  transition: transform 0.5s;
+//  transform: translateX(0%);
+//}
+//
+//.swiper-enter-from,
+//.swiper-leave-to {
+//  transform: translateX(100%);
+//}

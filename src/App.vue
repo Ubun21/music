@@ -1,7 +1,6 @@
 <template>
   <div class="app-view">
-    <router-view v-if="mobile" v-slot="{ Component }">
-      <component :is="Component" />
+    <router-view v-if="mobile">
     </router-view>
     <not-support-pc v-else></not-support-pc>
   </div>

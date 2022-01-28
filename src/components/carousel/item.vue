@@ -180,7 +180,7 @@ export default defineComponent({
       const duration = endTime - startTime // 用来判断快速滑动
       if ((dx < -width / 2) || (duration < 700 && dx < -minDinstance) || (fclick && dx < -minDinstance)) {
         direction = -1
-      } else if ((dx > width / 2) || (duration < 700 && dx < -minDinstance) || ((fclick && dx > minDinstance))) {
+      } else if ((dx > width / 2) || (duration < 700 && dx > minDinstance) || ((fclick && dx > minDinstance))) {
         direction = 1
       }
       const timeLine = new TimeLine()

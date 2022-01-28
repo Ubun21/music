@@ -23,6 +23,7 @@
         </carousel-item>
       </carousel>
     </div>
+    <router-view></router-view>
 </template>
 
 <script>
@@ -78,15 +79,16 @@ export default defineComponent({
       data.index = e
     }
     const onSelect = (item) => {
-      // router.push({
-      //   path: '/singer/',
-      //   query: {
-      //     id: item.mid,
-      //     pic: item.pic,
-      //     name: item.name
-      //   }
-      // })
-      router.push({ name: 'singer', params: { id: item.mid, pic: item.pic, name: item.name } })
+      router.push(
+        {
+          name: 'singer',
+          params: {
+            id: item.mid,
+            pic: item.pic,
+            name: item.name
+          }
+        }
+      )
     }
     return {
       data,

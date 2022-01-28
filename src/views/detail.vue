@@ -1,5 +1,5 @@
 <template>
-  <div class="topDetail-wrapper" v-if="data">
+  <div v-if="data">
     <music-list
       :songs="data.songs"
       :title="song.name"
@@ -33,7 +33,6 @@ export default defineComponent({
       return result
     }).then((songs) => {
       data.value.songs = songs
-      console.info(song)
     })
     return {
       song,

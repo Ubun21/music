@@ -188,6 +188,7 @@ export default defineComponent({
   overflow: hidden;
   .head-wrapper {
     overflow: hidden;
+    width: 100vw;
     .head-bgImage {
       padding-top: 70%;
       background-size: cover;
