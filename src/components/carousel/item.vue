@@ -102,6 +102,7 @@ export default defineComponent({
       startX = getClientX(e)
       startY = getClientY(e)
       startTime = Date.now()
+      clearTimeout(loopTimeId) // 清除快速滑动之后启动下一轮主动滑动之前的timeId
       scopeCarousel.data.pauser()
       // 计算动画产生的偏移
       const width = scopeCarousel.offsetWidth.value
